@@ -200,12 +200,13 @@ var _backbone = require('backbone');
 
 var _backbone2 = _interopRequireDefault(_backbone);
 
-var _viewsPagesHome = require('./views/pages/home');
+var _viewsPagesIntro = require('./views/pages/intro');
 
-var _viewsPagesHome2 = _interopRequireDefault(_viewsPagesHome);
+var _viewsPagesIntro2 = _interopRequireDefault(_viewsPagesIntro);
 
 var routes = {
-  '': 'index'
+  '': 'index',
+  ':jobid': 'viewJobById'
 };
 
 // Defining the application router.
@@ -222,8 +223,11 @@ var Router = (function (_Backbone$Router) {
   _createClass(Router, [{
     key: 'index',
     value: function index() {
-      new _viewsPagesHome2['default']({ el: 'main' }).render();
+      new _viewsPagesIntro2['default']({ el: 'main' }).render();
     }
+  }, {
+    key: 'viewJobById',
+    value: function viewJobById(jobId) {}
   }]);
 
   return Router;
@@ -232,7 +236,7 @@ var Router = (function (_Backbone$Router) {
 exports['default'] = Router;
 module.exports = exports['default'];
 
-},{"./views/pages/home":7,"backbone":9}],3:[function(require,module,exports){
+},{"./views/pages/intro":7,"backbone":9}],3:[function(require,module,exports){
 module.exports = {
 _partials: {},
 _filters: {},
@@ -362,7 +366,7 @@ registerFilter: function registerFilter(name, callback) {
 render: function(data) {
 return function anonymous(data,template
 /**/) {
-return '' + (template.getPartial('layouts/page').registerPartial('content', { render: function(_data) {data = _data || data;return '  '+'<'+'h2'+'>'+'a'+' '+'modern'+' '+'web'+' '+'application'+' '+'architecture'+'<'+'/h2'+'>'+'\n';}, data: data, _filters: {}, _partials: {} }),template.getPartial('layouts/page').render(data))
+return '' + (template.getPartial('layouts/page').registerPartial('content', { render: function(_data) {data = _data || data;return '<'+'div'+' '+'cl'+'as'+'s="container-fluid"'+'>'+'\n  '+'<'+'div'+' '+'cl'+'as'+'s="row"'+'>'+'\n    '+'<'+'div'+' '+'cl'+'as'+'s="center-block'+' '+'input-box"'+'>'+'\n      '+'<'+'h3'+'>'+'The'+' '+'job'+' '+'title'+' '+'is'+' '+'<'+'input'+' '+'type="text"'+' '+'placeholder="UX/UI'+' '+'Designer"'+'>'+'<'+'/h3'+'>'+'\n    '+'<'+'/div'+'>'+'\n  '+'<'+'/div'+'>'+'\n  '+'<'+'div'+' '+'cl'+'as'+'s="row"'+'>'+'\n      '+'<'+'form'+' '+'action="/file-upload"'+' '+'cl'+'as'+'s="dropzone'+' '+'dz-clickable"'+' '+'dropzone'+' '+'id="my-awesome-dropzone"'+'>'+'\n        '+'<'+'div'+' '+'cl'+'as'+'s="dz-default'+' '+'dz-message"'+'>'+'\n          '+'<'+'span'+'>'+'Hi'+'<'+'/span'+'>'+'\n        '+'<'+'/div'+'>'+'\n      '+'<'+'/form'+'>'+'\n  '+'<'+'/div'+'>'+'\n'+'<'+'/div'+'>'+'\n';}, data: data, _filters: {}, _partials: {} }),template.getPartial('layouts/page').render(data))
 }(data, this)
 }
 }
@@ -379,16 +383,16 @@ var _component = require('../../component');
 
 var _component2 = _interopRequireDefault(_component);
 
-var _homeHtml = require('./home.html');
+var _introHtml = require('./intro.html');
 
-var _homeHtml2 = _interopRequireDefault(_homeHtml);
+var _introHtml2 = _interopRequireDefault(_introHtml);
 
 // Import components.
 
 require('../components/sample-component');
 
 exports['default'] = _component2['default'].extend({
-  template: _homeHtml2['default'],
+  template: _introHtml2['default'],
 
   initialize: function initialize() {
     this.template.registerPartial('nav', require('../partials/nav.html'));
@@ -396,7 +400,7 @@ exports['default'] = _component2['default'].extend({
 });
 module.exports = exports['default'];
 
-},{"../../component":1,"../components/sample-component":4,"../partials/nav.html":8,"./home.html":6}],8:[function(require,module,exports){
+},{"../../component":1,"../components/sample-component":4,"../partials/nav.html":8,"./intro.html":6}],8:[function(require,module,exports){
 module.exports = {
 _partials: {},
 _filters: {},
@@ -426,7 +430,7 @@ registerFilter: function registerFilter(name, callback) {
 render: function(data) {
 return function anonymous(data,template
 /**/) {
-return '' + '<nav>\n  <div class="header"></div>\n\n  <h1>Backbone Boilerplate</h1>\n\n  <hr>\n\n  <a href="#getting-started">Getting started</a>\n  <a href="#components">Components</a>\n  <a href="#components">Deployment</a>\n</nav>\n'
+return '' + '<nav class="navbar navbar-default">\n    <div class="navbar-center navbar-brand">\n      <a class="navbar-brand">Rankr</a>\n    </div>\n</nav>\n'
 }(data, this)
 }
 }

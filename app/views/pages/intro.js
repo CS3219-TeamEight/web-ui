@@ -1,5 +1,5 @@
 import Component from '../../component';
-import template from './home.html';
+import template from './intro.html';
 
 // Import components.
 import '../components/sample-component';

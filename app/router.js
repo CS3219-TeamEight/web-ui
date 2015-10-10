@@ -1,8 +1,9 @@
 import Backbone from 'backbone';
-import HomePage from './views/pages/home';
+import Intro from './views/pages/intro';
 
 const routes = {
-  '': 'index'
+  '': 'index',
+  ':jobid': 'viewJobById'
 };
 
 // Defining the application router.
@@ -12,7 +13,11 @@ class Router extends Backbone.Router {
   }
 
   index() {
-    new HomePage({ el: 'main' }).render();
+    new Intro({ el: 'main' }).render();
+  }
+
+  viewJobById(jobId) {
+
   }
 }
 

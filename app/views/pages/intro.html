@@ -1,0 +1,16 @@
+{%extend layouts/page as content%}
+<div class="container-fluid">
+  <div class="row">
+    <div class="center-block input-box">
+      <h3>The job title is <input type="text" placeholder="UX/UI Designer"></h3>
+    </div>
+  </div>
+  <div class="row">
+      <form action="/file-upload" class="dropzone dz-clickable" dropzone id="my-awesome-dropzone">
+        <div class="dz-default dz-message">
+          <span>Hi</span>
+        </div>
+      </form>
+  </div>
+</div>
+{%endextend%}

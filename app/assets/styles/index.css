@@ -4297,12 +4297,21 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
   border-width: 1px 0 0;
   }
 .navbar-brand {
-  float: left;
+  float: none;
   height: 50px;
   padding: 15px 15px;
   font-size: 18px;
   line-height: 20px;
-  }
+}
+.navbar-center {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  text-align: center;
+  margin: auto;
+  height: 100%;
+}
 .navbar-brand:hover,
 .navbar-brand:focus {
   text-decoration: none;
@@ -4537,15 +4546,15 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
     }
   }
 .navbar-default {
-  background-color: #f8f8f8;
-  border-color: #e7e7e7;
+  background-color: #2E3030;
+  border-color: #2E3030;
   }
 .navbar-default .navbar-brand {
-  color: #777;
+  color: #FFFFFF;
   }
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
-  color: #5e5e5e;
+  color: #b19797;
   background-color: transparent;
   }
 .navbar-default .navbar-text {
@@ -6620,6 +6629,7 @@ button.close {
   clear: both;
   }
 .center-block {
+  text-align: center;
   display: block;
   margin-right: auto;
   margin-left: auto;
@@ -14398,4 +14408,15 @@ footer#page-footer #skin-footer > #skin-footer-copyright > a {
   width: 100%;
   height: 400px;
   }
+.input-box input[type="text"] {
+  padding: 5px;
+  border: none;
+  border-bottom: solid 2px #c9c9c9;
+  transition: border 0.3s;
+}
+.input-box input[type="text"]:focus,
+.input-box input[type="text"].focus {
+  outline: none;
+  border-bottom: solid 2px #414141;
+}
 /*# sourceMappingURL=bootstrap.css.map */
