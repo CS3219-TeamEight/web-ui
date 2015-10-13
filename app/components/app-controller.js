@@ -17,7 +17,7 @@ var AppController = {
       var renderDropzone = function() {
         var drop = new Dropzone("#resume-dropzone", {url: "http://localhost:8080/api/resumes"});
           drop.on('sending', function(file, xhr, formData) {
-            formData.append('jobID', view.jobID)
+            formData.append('jobID', view.jobID);
           });
 
           drop.on('success', function() {
