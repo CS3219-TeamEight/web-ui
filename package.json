@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "backbone": "^1.2.2",
+    "dropzone": "^4.2.0",
     "jquery": "^2.1.4",
     "layoutmanager": "0.9.7",
     "mocha": "^2.2.5",

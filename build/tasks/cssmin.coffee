@@ -5,4 +5,5 @@ module.exports = ->
   @config 'cssmin',
     release:
       files:
-        'dist/styles.min.css': ['app/styles/index.css']
+        'dist/styles.min.css': ['app/styles/index.css',
+        'app/styles/dropzone.css']

@@ -15,15 +15,95 @@
 </head>
 
 <body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-default">
+      <div class="navbar-center navbar-brand">
+        <a class="navbar-brand">Rankr</a>
+      </div>
+  </nav>
+
   <!-- Application container. -->
   <main role="main" id="main"></main>
+
+  <!-- Templates for View -->
+  <script type="text/template" id="create-template">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="center-block input-box">
+          <h3>The job title is <input id="txtTitle" type="text" placeholder="UX/UI Designer"></h3>
+        </div>
+      </div>
+      <div class="row top10">
+          <form action="/file-upload" class="dropzone dz-clickable" dropzone id="description-dropzone">
+            <div class="dz-default dz-message">
+              <span>Drag your job description here</span>
+            </div>
+          </form>
+      </div>
+      <div class="row">
+        <div class="center-block">
+          <h4>or type it here</h4>
+          <textarea id="txtDesc" class="form-control" rows="6" placeholder="This is a job for the best designers..."></textarea>
+        </div>
+      </div>
+      <div class="row top30">
+        <div class="center-block">
+           <button id="btnCreate" type="button" class="btn btn-primary btn-lg">Start Ranking!</button>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/template" id="job-template">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="center-block">
+          <h3>The job title is <%- jobTitle %></h3>
+        </div>
+      </div>
+      <div class="row top10">
+        <div class="center-block">
+          <h4><%- jobDescription %></h4>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/template" id="resume-template">
+    <div class="container-fluid">
+      <div class="row top30">
+      <% if (!isEmpty) {%>
+        <table class="table table-striped">
+          <tr>
+            <td>#</td>
+            <td>Resume</td>
+            <td>Score</td>
+          </tr>
+          <% _.each(resumes, function(resume) { %>
+          <tr>
+            <td><%- resume.id %></td>
+            <td><%- resume.resumePath %></td>
+            <td><%- resume.score %></td>
+          </tr>
+          <% }); %>
+        </table>
+      <% } %>
+      </div>
+      <div class="row top30">
+        <div class="center-block">
+          <div class="dropzone dz-clickable" id="resume-dropzone">
+          </div>
+        </div>
+      </div>
+    </div>
+  </script>
 
   <!-- Application source. -->
   <!-- build:[src] /source.min.js -->
   <script src="dist/source.js"></script>
   <!-- /build -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
   <script src="app/assets/js/bootstrap.js"></script>
-  <script src="app/assets/js/dropzone.js"></script>
 
   <!-- build:remove -->
   <script src="http://localhost:35729/livereload.js"></script>
