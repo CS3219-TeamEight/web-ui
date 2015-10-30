@@ -350,27 +350,33 @@ var _collectionsResumes = require('../collections/resumes');
 var _collectionsResumes2 = _interopRequireDefault(_collectionsResumes);
 
 var ResumeView = _backbone2['default'].View.extend({
+
   template: _underscore2['default'].template((0, _jquery2['default'])('#resume-template').html()),
   initialize: function initialize(config) {
     this.collection = new _collectionsResumes2['default']();
     this.jobID = config.jobID;
+    this.timer = setInterval((function () {
+      this.collection.fetch({ data: { id: this.jobID } });
+    }).bind(this), 5000);
+    this.listenTo(self.collection, 'add', this.render);
+  },
+  close: function close() {
+    clearInterval(this.timer);
   },
   render: function render() {
     var self = this;
-
-    return this.collection.fetch({ data: { id: this.jobID } }).then(function () {
-      self.listenTo(self.collection, 'add', self.render);
+    var renderCollection = function renderCollection() {
       if (self.collection.length === 0) {
-        self.$el.html(self.template({ isEmpty: true }));
+        self.$el.html(self.template());
       } else {
         var contents = {};
         contents.resumes = self.collection.toJSON();
         contents.isEmpty = false;
         self.$el.html(self.template(contents));
       }
-
       return self;
-    });
+    };
+    return this.collection.fetch({ data: { id: this.jobID } }).then(renderCollection);
   }
 });
 
