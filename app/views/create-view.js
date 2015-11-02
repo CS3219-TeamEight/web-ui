@@ -14,17 +14,29 @@ var CreateView = Backbone.View.extend({
     'click #btnCreate': 'addJob'
   },
   addJob: function() {
-    var title = $('#txtTitle').val();
-    var description = $('#txtDesc').val();
+    var title = $('#txtTitle').val().trim();
+    var description = $('#txtDesc').val().trim();
 
-    var newJob = new this.model({
-      description: description,
-      title: title
-    });
+    if(_.isEmpty(title)) {
+      $('#txtTitle').popover('show');
+      setTimeout(function(){$('#txtTitle').popover('hide');}, 1000);
+    }
 
-    newJob.save(null, {success: function(model, response) {
-      Backbone.history.navigate(model.get('id'), true);
-    }});
+    if (_.isEmpty(description)) {
+      $('#txtDesc').popover('show');
+      setTimeout(function(){$('#txtDesc').popover('hide');}, 1000);
+    }
+
+    if(!_.isEmpty(title) && !_.isEmpty(description)) {
+      var newJob = new this.model({
+        description: description,
+        title: title
+      });
+
+      newJob.save(null, {success: function(model, response) {
+        Backbone.history.navigate(model.get('id'), true);
+      }});
+    }
   }
 });
 

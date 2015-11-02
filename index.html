@@ -19,7 +19,7 @@
     <div class="container-fluid">
       <div class="navbar-header">
         <div class="navbar-brand">
-          <img src="/app/assets/img/logo-96.png">
+          <a href="#"><img src="/app/assets/img/logo-96.png"></a>
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="center-block input-box">
-          <h3>The job title is <input id="txtTitle" type="text" placeholder="UX/UI Designer"></h3>
+          <h3>The job title is <input id="txtTitle" type="text" placeholder="UX/UI Designer" data-trigger="manual" data-placement="right" data-content="Please enter a job title."></h3>
         </div>
       </div>
       <div class="row top10">
@@ -48,7 +48,7 @@
       <div class="row top10">
         <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
           <h4 align="center">or type it here</h4>
-          <textarea id="txtDesc" class="form-control" rows="6" placeholder="This is a job for the best designers..."></textarea>
+          <textarea id="txtDesc" class="form-control" rows="6" placeholder="This is a job for the best designers..." data-trigger="manual" data-placement="right" data-content="Please enter a job description."></textarea>
         </div>
       </div>
       <div class="row top17">
@@ -91,27 +91,16 @@
           </a>
         </div>
       </div>
-      <div id="resumes" class="row top10 collapse in">
-        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
-          <table class="table table-striped table-responsive">
-            <tr>
-              <td>#</td>
-              <td>Resume</td>
-              <td class="col-md-2 col-xs-3">Score</td>
-            </tr>
-            <% _.each(resumes, function(resume) { %>
-            <tr>
-              <td><%- resume.id %></td>
-              <td><%- resume.resumePath %></td>
-              <td><%- resume.score %></td>
-            </tr>
-            <% }); %>
-          </table>
+      <div id="resumes" class="collapse in">
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+            <div class="center-block input-box">
+              <h4>Give me the top <input id="resumeCount" class="resume-box" type="text" maxLength="3" placeholder="10" data-trigger="manual" data-placement="top" data-content="Please enter a valid limit.">resumes</h4>
+            </div>
+          </div>
         </div>
-      </div>
-      <div id="resumes" class="row top10 collapse in">
-        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
-          <table id="resume-table"></table>
+        <div id="data-table" class="row">
+          <%= dataTable %>
         </div>
       </div>
       <% } %>
@@ -129,12 +118,29 @@
     </div>
   </script>
 
+  <script type="text/template" id="data-template">
+    <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+      <table class="table table-striped table-responsive">
+        <tr>
+          <td class="col-md-2 col-xs-2">#</td>
+          <td>Resume</td>
+          <td class="col-md-2 col-xs-3"><span id="scoreToggle">Score <img id="sortArrow" src="/app/assets/img/sort-arrow-down.png"></span></td>
+        </tr>
+        <% _.each(resumes, function(resume) { %>
+        <tr>
+          <td><%- resume.rank %></td>
+          <td><%- resume.resumePath %></td>
+          <td><%- resume.score %></td>
+        </tr>
+        <% }); %>
+      </table>
+    </div>
+  </script>
+
   <!-- Application source. -->
   <!-- build:[src] /source.min.js -->
   <script src="dist/source.js"></script>
   <!-- /build -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
-  <script src="app/assets/js/bootstrap.js"></script>
 
   <!-- build:remove -->
   <script src="http://localhost:35729/livereload.js"></script>

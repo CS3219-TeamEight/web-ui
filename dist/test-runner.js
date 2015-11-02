@@ -16,6 +16,14 @@ var _modelsResume = require('../models/resume');
 var _modelsResume2 = _interopRequireDefault(_modelsResume);
 
 var Resumes = _backbone2['default'].Collection.extend({
+  comparator: function comparator(a, b) {
+    var score = a.get('score') - b.get('score');
+    if (score === 0) {
+      return a.get('score') < b.get('score') ? -1 : 1;
+    }
+
+    return score;
+  },
   model: _modelsResume2['default'],
   url: 'http://localhost:8080/api/resumes'
 });
@@ -154,7 +162,7 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
@@ -251,17 +259,33 @@ var CreateView = _backbone2['default'].View.extend({
     'click #btnCreate': 'addJob'
   },
   addJob: function addJob() {
-    var title = (0, _jquery2['default'])('#txtTitle').val();
-    var description = (0, _jquery2['default'])('#txtDesc').val();
+    var title = (0, _jquery2['default'])('#txtTitle').val().trim();
+    var description = (0, _jquery2['default'])('#txtDesc').val().trim();
 
-    var newJob = new this.model({
-      description: description,
-      title: title
-    });
+    if (_underscore2['default'].isEmpty(title)) {
+      (0, _jquery2['default'])('#txtTitle').popover('show');
+      setTimeout(function () {
+        (0, _jquery2['default'])('#txtTitle').popover('hide');
+      }, 1000);
+    }
 
-    newJob.save(null, { success: function success(model, response) {
-        _backbone2['default'].history.navigate(model.get('id'), true);
-      } });
+    if (_underscore2['default'].isEmpty(description)) {
+      (0, _jquery2['default'])('#txtDesc').popover('show');
+      setTimeout(function () {
+        (0, _jquery2['default'])('#txtDesc').popover('hide');
+      }, 1000);
+    }
+
+    if (!_underscore2['default'].isEmpty(title) && !_underscore2['default'].isEmpty(description)) {
+      var newJob = new this.model({
+        description: description,
+        title: title
+      });
+
+      newJob.save(null, { success: function success(model, response) {
+          _backbone2['default'].history.navigate(model.get('id'), true);
+        } });
+    }
   }
 });
 
@@ -350,33 +374,69 @@ var _collectionsResumes = require('../collections/resumes');
 var _collectionsResumes2 = _interopRequireDefault(_collectionsResumes);
 
 var ResumeView = _backbone2['default'].View.extend({
-
   template: _underscore2['default'].template((0, _jquery2['default'])('#resume-template').html()),
+  dataTemplate: _underscore2['default'].template((0, _jquery2['default'])('#data-template').html()),
   initialize: function initialize(config) {
     this.collection = new _collectionsResumes2['default']();
     this.jobID = config.jobID;
+    this.scoreDescending = true;
+    this.limit = "";
     this.timer = setInterval((function () {
       this.collection.fetch({ data: { id: this.jobID } });
     }).bind(this), 5000);
     this.listenTo(self.collection, 'add', this.render);
+  },
+  events: {
+    'click #scoreToggle': 'toggleSort',
+    'keyup #resumeCount': 'handleFilterChange'
   },
   close: function close() {
     clearInterval(this.timer);
   },
   render: function render() {
     var self = this;
-    var renderCollection = function renderCollection() {
-      if (self.collection.length === 0) {
-        self.$el.html(self.template());
-      } else {
-        var contents = {};
-        contents.resumes = self.collection.toJSON();
-        contents.isEmpty = false;
-        self.$el.html(self.template(contents));
-      }
+    var computeWithTemplate = function computeWithTemplate(rendered) {
+      var content = self.collection.length === 0 ? { isEmpty: true } : { isEmpty: false, dataTable: rendered };
+      self.$el.html(self.template(content));
       return self;
     };
-    return this.collection.fetch({ data: { id: this.jobID } }).then(renderCollection);
+    return this.renderCollection().then(computeWithTemplate);
+  },
+  renderCollection: function renderCollection() {
+    var self = this;
+    var populateTable = function populateTable() {
+      if (self.collection.length === 0) return null;
+      var contents = {};
+      contents.resumes = self.collection.toJSON();
+      contents.resumes = _underscore2['default'].sortBy(contents.resumes, function (resume) {
+        return self.scoreDescending ? -resume.score : resume.score;
+      });
+      contents.resumes = _underscore2['default'].map(contents.resumes, function (resume, index) {
+        resume.rank = self.scoreDescending ? index + 1 : contents.resumes.length - index;
+        return resume;
+      });
+      return self.dataTemplate(contents);
+    };
+
+    return this.collection.fetch({ data: { id: this.jobID } }).then(populateTable);
+  },
+  toggleSort: function toggleSort() {
+    this.scoreDescending = !this.scoreDescending;
+    var arrowDirection = this.scoreDescending ? "down" : "up";
+    var refreshTable = function refreshTable(rendered) {
+      (0, _jquery2['default'])('#data-table').html(rendered);
+      (0, _jquery2['default'])('#sortArrow').attr("src", "/app/assets/img/sort-arrow-" + arrowDirection + ".png");
+    };
+    this.renderCollection().then(refreshTable);
+  },
+  handleFilterChange: function handleFilterChange() {
+    var limit = (0, _jquery2['default'])('#resumeCount').val().trim();
+    if (_underscore2['default'].isEmpty(limit)) this.limit = 10;else if (_underscore2['default'].isFinite(limit) && limit > 0) this.limit = limit;else {
+      (0, _jquery2['default'])('#resumeCount').popover('show');
+      setTimeout(function () {
+        (0, _jquery2['default'])('#resumeCount').popover('hide');
+      }, 1000);
+    }
   }
 });
 

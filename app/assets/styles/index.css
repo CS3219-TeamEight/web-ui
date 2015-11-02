@@ -2924,9 +2924,9 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 }
 .fade {
   opacity: 0;
-  -webkit-transition: opacity .15s linear;
-  -o-transition: opacity .15s linear;
-  transition: opacity .15s linear;
+  -webkit-transition: opacity .25s linear;
+  -o-transition: opacity .25s linear;
+  transition: opacity .25s linear;
 }
 .fade.in {
   opacity: 1;
@@ -5272,10 +5272,11 @@ button.close {
   left: 0;
   z-index: 1060;
   display: none;
+  min-width: 160px;
   max-width: 276px;
   padding: 1px;
   font-family: "Raleway", sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   font-style: normal;
   font-weight: normal;
   line-height: 1.42857143;
@@ -5289,10 +5290,9 @@ button.close {
   word-spacing: normal;
   word-wrap: normal;
   white-space: normal;
-  background-color: #2c4242;
+  background-color: #233;
   background-clip: padding-box;
-  border: 1px solid #000;
-  border: 1px solid rgba(0, 0, 0, .1);
+  border: 0px solid #000;
   border-radius: 3px;
   -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
@@ -5315,7 +5315,7 @@ button.close {
   margin: 0;
   font-size: 14px;
   background-color: #233;
-  border-bottom: 1px solid #182323;
+  border-bottom: 1px solid #233;
   border-radius: 2px 2px 0 0;
 }
 .popover-content {
@@ -5363,7 +5363,7 @@ button.close {
   bottom: -8px;
   left: 1px;
   content: " ";
-  border-right-color: #2c4242;
+  border-right-color: #233;
   border-left-width: 0;
 }
 .popover.bottom > .arrow {
@@ -5379,7 +5379,7 @@ button.close {
   margin-left: -8px;
   content: " ";
   border-top-width: 0;
-  border-bottom-color: #2c4242;
+  border-bottom-color: #233;
 }
 .popover.left > .arrow {
   top: 50%;
@@ -5394,7 +5394,7 @@ button.close {
   bottom: -8px;
   content: " ";
   border-right-width: 0;
-  border-left-color: #2c4242;
+  border-left-color: #233;
 }
 .carousel {
   position: relative;
@@ -12125,6 +12125,10 @@ footer#page-footer #skin-footer > #skin-footer-copyright > a {
 .input-box input[type="text"]:focus, .input-box input[type="text"].focus {
   outline: none;
   border-bottom: solid 2px #ffffff;
+}
+.resume-box {
+  width: 60px;
+  text-align: center;
 }
 .highlight-text {
     background: rgba(255, 255, 255, 0.4);
