@@ -58,7 +58,7 @@ var ResumeView = Backbone.View.extend({
     var refreshTable = function(rendered) {
       $('#data-table').html(rendered);
       $('#sortArrow').attr("src","/app/assets/img/sort-arrow-" + arrowDirection +".png");
-    }
+    };
     this.renderCollection().then(refreshTable);
   },
   handleFilterChange: function() {
