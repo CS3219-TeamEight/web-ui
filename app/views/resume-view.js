@@ -1,7 +1,9 @@
 import Backbone from 'backbone';
 import $ from 'jquery';
 import _ from 'underscore';
+import Config from 'config';
 import Dropzone from 'dropzone';
+import Spinner from 'spin.js';
 import Resumes from '../collections/resumes';
 
 var ResumeView = Backbone.View.extend({
@@ -11,11 +13,11 @@ var ResumeView = Backbone.View.extend({
     this.collection = new Resumes();
     this.jobID = config.jobID;
     this.scoreDescending = true;
-    this.limit = "";
+    this.limit = 10;
     this.timer = setInterval(function() {
       this.collection.fetch({data: {id: this.jobID}});
     }.bind(this), 5000);
-    this.listenTo(self.collection, 'add', this.render);
+    this.listenTo(this.collection, 'add', this.refreshTable);
   },
   events: {
     'click #scoreToggle': 'toggleSort',
@@ -31,6 +33,7 @@ var ResumeView = Backbone.View.extend({
       self.$el.html(self.template(content));
       return self;
     };
+
     return this.renderCollection().then(computeWithTemplate);
   },
   renderCollection: function() {
@@ -38,34 +41,46 @@ var ResumeView = Backbone.View.extend({
     var populateTable = function () {
       if (self.collection.length === 0) return null;
       var contents = {};
-      contents.resumes = self.collection.toJSON();
-      contents.resumes = _.sortBy(contents.resumes, function (resume) {
-        return self.scoreDescending ? -resume.score : resume.score;
-      });
+      contents.resumes = self.collection.first(parseInt(self.limit));
       contents.resumes = _.map(contents.resumes, function(resume, index) {
+        resume = resume.toJSON();
+        resume.fileName = resume.resumePath.split("/").pop();
+        resume.download = Config.get('Client.restServer.address') + Config.get('Client.restServer.apiRoot') + Config.get('Client.restServer.resumePath') + '/' + resume.id;
         resume.rank = self.scoreDescending ? index + 1 : contents.resumes.length - index;
         return resume;
       });
+
+      contents.resumes = _.sortBy(contents.resumes, function (resume) {
+        return self.scoreDescending ? -resume.score : resume.score;
+      });
+
       return self.dataTemplate(contents);
     };
 
     return this.collection.fetch({data: {id: this.jobID}})
       .then(populateTable);
   },
+  renderTable: function(rendered) {
+    return Promise.resolve($('#data-table').html(rendered));
+  },
+  refreshTable: function() {
+    return this.renderCollection().then(this.renderTable);
+  },
   toggleSort: function() {
     this.scoreDescending = !this.scoreDescending;
     var arrowDirection = this.scoreDescending ? "down" : "up";
-    var refreshTable = function(rendered) {
-      $('#data-table').html(rendered);
+    var refreshArrow = function(rendered) {
       $('#sortArrow').attr("src","/app/assets/img/sort-arrow-" + arrowDirection +".png");
     };
-    this.renderCollection().then(refreshTable);
+    this.renderCollection().then(this.renderTable).then(refreshArrow);
   },
   handleFilterChange: function() {
     var limit = $('#resumeCount').val().trim();
     if (_.isEmpty(limit)) this.limit = 10;
-    else if (_.isFinite(limit) && limit > 0) this.limit = limit;
-    else {
+    else if (_.isFinite(limit) && limit > 0){
+      this.limit = limit;
+      return this.refreshTable();
+    } else {
       $('#resumeCount').popover('show');
       setTimeout(function(){$('#resumeCount').popover('hide');}, 1000);
     }

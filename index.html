@@ -129,7 +129,7 @@
         <% _.each(resumes, function(resume) { %>
         <tr>
           <td><%- resume.rank %></td>
-          <td><%- resume.resumePath %></td>
+          <td><a href="<%- resume.download %>"><%- resume.fileName %></a></td>
           <td><%- resume.score %></td>
         </tr>
         <% }); %>

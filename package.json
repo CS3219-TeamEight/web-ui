@@ -35,11 +35,18 @@
   "dependencies": {
     "backbone": "^1.2.2",
     "bootstrap": "^3.3.5",
+    "config": "^1.16.0",
+    "config-browserify": "^1.0.5",
     "dropzone": "^4.2.0",
     "jquery": "^2.1.4",
+    "jquery-ui": "^1.10.5",
     "layoutmanager": "0.9.7",
     "mocha": "^2.2.5",
     "purecss": "^0.6.0",
+    "spin.js": "^2.3.2",
     "underscore": "^1.8.3"
+  },
+  "browserify": {
+    "transform": "config-browserify"
   }
 }

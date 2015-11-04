@@ -8,7 +8,7 @@ var CreateView = Backbone.View.extend({
   template: _.template($('#create-template').html()),
   render: function() {
     this.$el.html(this.template());
-    return this;
+    return Promise.resolve(this);
   },
   events: {
     'click #btnCreate': 'addJob'

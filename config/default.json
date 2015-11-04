@@ -1,0 +1,11 @@
+{
+  "Client": {
+    "testProperty": "Default",
+    "restServer": {
+      "address" : "http://localhost:8080",
+      "apiRoot" : "/api",
+      "resumePath" : "/resumes",
+      "jobPath" : "/jobs"
+    }
+  }
+}
