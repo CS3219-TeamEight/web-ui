@@ -29,7 +29,6 @@ module.exports = ->
     "processhtml"
     "copy"
     "cssmin"
-    "karma:run"
   ]
 
   # Alias to development.

@@ -488,9 +488,12 @@ var ResumeView = _backbone2['default'].View.extend({
   },
   toggleSort: function toggleSort() {
     this.scoreDescending = !this.scoreDescending;
-    var arrowDirection = this.scoreDescending ? "down" : "up";
+    var arrowDirection = this.scoreDescending ? 'down' : 'up';
+    var oppositeDirection = this.scoreDescending ? 'up' : 'down';
     var refreshArrow = function refreshArrow(rendered) {
-      (0, _jquery2['default'])('#sortArrow').attr("src", "/app/assets/img/sort-arrow-" + arrowDirection + ".png");
+      var currentArrow = (0, _jquery2['default'])('#sortArrow').attr('src');
+      currentArrow = currentArrow.replace(new RegExp(oppositeDirection, 'g'), arrowDirection);
+      (0, _jquery2['default'])('#sortArrow').attr("src", currentArrow);
     };
     this.renderCollection().then(this.renderTable).then(refreshArrow);
   },

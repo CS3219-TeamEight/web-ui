@@ -68,9 +68,12 @@ var ResumeView = Backbone.View.extend({
   },
   toggleSort: function() {
     this.scoreDescending = !this.scoreDescending;
-    var arrowDirection = this.scoreDescending ? "down" : "up";
+    var arrowDirection = this.scoreDescending ? 'down' : 'up';
+    var oppositeDirection = this.scoreDescending ? 'up' : 'down';
     var refreshArrow = function(rendered) {
-      $('#sortArrow').attr("src","/app/assets/img/sort-arrow-" + arrowDirection +".png");
+      var currentArrow = $('#sortArrow').attr('src');
+      currentArrow = currentArrow.replace(new RegExp(oppositeDirection, 'g'), arrowDirection);
+      $('#sortArrow').attr("src", currentArrow);
     };
     this.renderCollection().then(this.renderTable).then(refreshArrow);
   },
