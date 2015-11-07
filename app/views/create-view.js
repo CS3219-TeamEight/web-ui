@@ -1,6 +1,7 @@
 import Backbone from 'backbone';
 import $ from 'jquery';
 import _ from 'underscore';
+import ShortID from 'shortid';
 import Job from '../models/job';
 
 var CreateView = Backbone.View.extend({
@@ -29,6 +30,7 @@ var CreateView = Backbone.View.extend({
 
     if(!_.isEmpty(title) && !_.isEmpty(description)) {
       var newJob = new this.model({
+        desiredID: ShortID.generate(),
         description: description,
         title: title
       });

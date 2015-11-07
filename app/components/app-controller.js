@@ -12,7 +12,7 @@ var AppController = {
       var view = new CreateView();
       this.renderView.call(self, view);
     },
-    jobDetails: function (id) {
+    jobDetails: function(id) {
       var view = new JobView({jobID: id});
       this.renderView.call(self, view).then(function() { ResumeDrop.render(view); });
     },
@@ -26,6 +26,9 @@ var AppController = {
       }.bind(this);
 
       return $('#main').fadeOut().promise().then(renderContent);
+    },
+    renderError: function() {
+
     }
 };
 
