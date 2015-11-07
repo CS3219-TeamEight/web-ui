@@ -2,10 +2,13 @@
   "Client": {
     "testProperty": "Default",
     "restServer": {
-      "address" : "http://localhost:8080",
+      "address" : "http://188.166.232.209:8080",
       "apiRoot" : "/api",
       "resumePath" : "/resumes",
       "jobPath" : "/jobs"
+    },
+    "assets": {
+      "root": "/assets"
     }
   }
 }

@@ -1,4 +1,5 @@
 import Backbone from 'backbone';
+import Config from 'config';
 import Resume from '../models/resume';
 
 var Resumes = Backbone.Collection.extend({
@@ -11,7 +12,7 @@ var Resumes = Backbone.Collection.extend({
       return score;
   },
   model: Resume,
-  url: 'http://localhost:8080/api/resumes'
+  url: Config.get('Client.restServer.address') + Config.get('Client.restServer.apiRoot') + Config.get('Client.restServer.resumePath'),
 });
 
 export default Resumes;

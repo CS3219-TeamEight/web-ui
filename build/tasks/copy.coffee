@@ -6,5 +6,6 @@ module.exports = ->
   @config 'copy',
     release:
       files: [
-        cwd: 'app/', src: 'assets/**', dest: 'dist/', expand: true
+        { cwd: 'app/', src: 'assets/**', dest: 'dist/', expand: true }
+        { cwd: '/', src: 'favicon.ico', dest: 'dist/', expand: true }
       ]

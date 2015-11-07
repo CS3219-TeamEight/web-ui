@@ -1,5 +1,6 @@
 {
   "name": "rankr-web-ui",
+  "description": "The user interface for Rankr.",
   "version": "1.0.0",
   "license": "MIT",
   "devDependencies": {
@@ -14,6 +15,7 @@
     "grunt-contrib-cssmin": "~0.10.0",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-env": "^0.4.4",
     "grunt-karma": "~0.12.0",
     "grunt-karma-coveralls": "~2.5.1",
     "grunt-processhtml": "~0.3.3",

@@ -11,6 +11,33 @@ var _backbone = require('backbone');
 
 var _backbone2 = _interopRequireDefault(_backbone);
 
+var _config = (function (props) {
+                        var self = {};
+                        var _getByPropPath = function (o, s) {
+                            // http://stackoverflow.com/a/6491621
+                            s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+                            s = s.replace(/^\./, '');           // strip a leading dot
+                            var a = s.split('.');
+                            for (var i = 0, n = a.length; i < n; ++i) {
+                                var k = a[i];
+                                if (k in o) {
+                                    o = o[k];
+                                } else {
+                                    return;
+                                }
+                            }
+                            return o;
+                        };
+
+                        self.get = function (a) {
+                            return _getByPropPath(props, a);
+                        };
+
+                        return self;
+                    })({"Client":{"testProperty":"Default","restServer":{"address":"http://localhost:8080","apiRoot":"/api","resumePath":"/resumes","jobPath":"/jobs"},"assets":{"root":"/app/assets"}}});;
+
+var _config2 = _interopRequireDefault(_config);
+
 var _modelsResume = require('../models/resume');
 
 var _modelsResume2 = _interopRequireDefault(_modelsResume);
@@ -25,13 +52,13 @@ var Resumes = _backbone2['default'].Collection.extend({
     return score;
   },
   model: _modelsResume2['default'],
-  url: 'http://localhost:8080/api/resumes'
+  url: _config2['default'].get('Client.restServer.address') + _config2['default'].get('Client.restServer.apiRoot') + _config2['default'].get('Client.restServer.resumePath')
 });
 
 exports['default'] = Resumes;
 module.exports = exports['default'];
 
-},{"../models/resume":4,"backbone":9}],2:[function(require,module,exports){
+},{"../models/resume":5,"backbone":10}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -52,9 +79,60 @@ var _underscore = require('underscore');
 
 var _underscore2 = _interopRequireDefault(_underscore);
 
-var _dropzone = require('dropzone');
+var _viewsCreateView = require('../views/create-view');
 
-var _dropzone2 = _interopRequireDefault(_dropzone);
+var _viewsCreateView2 = _interopRequireDefault(_viewsCreateView);
+
+var _viewsJobView = require('../views/job-view');
+
+var _viewsJobView2 = _interopRequireDefault(_viewsJobView);
+
+var _resumeDropzone = require('./resume-dropzone');
+
+var _resumeDropzone2 = _interopRequireDefault(_resumeDropzone);
+
+require('jquery-ui');
+
+var AppController = {
+  currentView: null,
+  createJob: function createJob() {
+    var view = new _viewsCreateView2['default']();
+    this.renderView.call(self, view);
+  },
+  jobDetails: function jobDetails(id) {
+    var view = new _viewsJobView2['default']({ jobID: id });
+    this.renderView.call(self, view).then(function () {
+      _resumeDropzone2['default'].render(view);
+    });
+  },
+  renderView: function renderView(view) {
+    var renderContent = (function () {
+      var removeView = this.currentView && this.currentView.remove();
+      this.currentView = view;
+      return view.render().then(function (rendered) {
+        (0, _jquery2['default'])('#main').html(rendered.el).fadeIn();
+      });
+    }).bind(this);
+
+    return (0, _jquery2['default'])('#main').fadeOut().promise().then(renderContent);
+  }
+};
+
+exports['default'] = AppController;
+module.exports = exports['default'];
+
+},{"../views/create-view":7,"../views/job-view":8,"./resume-dropzone":3,"backbone":10,"jquery":13,"jquery-ui":12,"underscore":15}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _jquery = require('jquery');
+
+var _jquery2 = _interopRequireDefault(_jquery);
 
 var _config = (function (props) {
                         var self = {};
@@ -79,57 +157,50 @@ var _config = (function (props) {
                         };
 
                         return self;
-                    })({"Client":{"testProperty":"Default","restServer":{"address":"http://localhost:8080","apiRoot":"/api","resumePath":"/resumes","jobPath":"/jobs"}}});;
+                    })({"Client":{"testProperty":"Default","restServer":{"address":"http://localhost:8080","apiRoot":"/api","resumePath":"/resumes","jobPath":"/jobs"},"assets":{"root":"/app/assets"}}});;
 
 var _config2 = _interopRequireDefault(_config);
 
-var _viewsCreateView = require('../views/create-view');
+var _dropzone = require('dropzone');
 
-var _viewsCreateView2 = _interopRequireDefault(_viewsCreateView);
+var _dropzone2 = _interopRequireDefault(_dropzone);
 
-var _viewsJobView = require('../views/job-view');
+var renderDropzone = function renderDropzone(view) {
+  var resumeAddress = _config2['default'].get('Client.restServer.address') + _config2['default'].get('Client.restServer.apiRoot') + _config2['default'].get('Client.restServer.resumePath');
+  var resumeConfig = {
+    url: resumeAddress,
+    method: 'post',
+    maxFilesize: 8,
+    clickable: true,
+    acceptedFiles: 'application/pdf, application/octet-stream, application/zip'
+  };
+  var drop = new _dropzone2['default']('#resume-dropzone', resumeConfig);
 
-var _viewsJobView2 = _interopRequireDefault(_viewsJobView);
+  drop.on('sending', function (file, xhr, formData) {
+    formData.append('jobID', view.jobID);
+  });
 
-require('jquery-ui');
-
-var AppController = {
-  currentView: null,
-  createJob: function createJob() {
-    var view = new _viewsCreateView2['default']();
-    this.renderView.call(self, view);
-  },
-
-  jobDetails: function jobDetails(id) {
-    var self = this;
-    var renderDropzone = function renderDropzone() {
-      var resumeAddress = _config2['default'].get('Client.restServer.address') + _config2['default'].get('Client.restServer.apiRoot') + _config2['default'].get('Client.restServer.resumePath');
-      var drop = new _dropzone2['default']("#resume-dropzone", { url: resumeAddress });
-      drop.on('sending', function (file, xhr, formData) {
-        formData.append('jobID', view.jobID);
-      });
-    };
-    var view = new _viewsJobView2['default']({ jobID: id });
-    this.renderView.call(self, view).then(renderDropzone);
-  },
-
-  renderView: function renderView(view) {
-    var renderContent = (function () {
-      var removeView = this.currentView && this.currentView.remove();
-      this.currentView = view;
-      return view.render().then(function (rendered) {
-        (0, _jquery2['default'])('#main').html(rendered.el).fadeIn();
-      });
-    }).bind(this);
-
-    return (0, _jquery2['default'])('#main').fadeOut().promise().then(renderContent);
-  }
+  drop.on('addedfile', function (file) {
+    switch (file.type) {
+      case 'application/pdf':
+        (0, _jquery2['default'])(file.previewElement).find('.dz-image img').attr('src', _config2['default'].get('Client.assets.root') + '/img/pdf-dropzone.png');
+        break;
+      case 'application/octet-stream':
+      case 'application/zip':
+        (0, _jquery2['default'])(file.previewElement).find('.dz-image img').attr('src', _config2['default'].get('Client.assets.root') + '/img/zip-dropzone.png');
+        break;
+    }
+  });
 };
 
-exports['default'] = AppController;
+var resumeDrop = {
+  render: renderDropzone
+};
+
+exports['default'] = resumeDrop;
 module.exports = exports['default'];
 
-},{"../views/create-view":6,"../views/job-view":7,"backbone":9,"dropzone":10,"jquery":12,"jquery-ui":11,"underscore":14}],3:[function(require,module,exports){
+},{"dropzone":11,"jquery":13}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -142,9 +213,36 @@ var _backbone = require('backbone');
 
 var _backbone2 = _interopRequireDefault(_backbone);
 
+var _config = (function (props) {
+                        var self = {};
+                        var _getByPropPath = function (o, s) {
+                            // http://stackoverflow.com/a/6491621
+                            s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+                            s = s.replace(/^\./, '');           // strip a leading dot
+                            var a = s.split('.');
+                            for (var i = 0, n = a.length; i < n; ++i) {
+                                var k = a[i];
+                                if (k in o) {
+                                    o = o[k];
+                                } else {
+                                    return;
+                                }
+                            }
+                            return o;
+                        };
+
+                        self.get = function (a) {
+                            return _getByPropPath(props, a);
+                        };
+
+                        return self;
+                    })({"Client":{"testProperty":"Default","restServer":{"address":"http://localhost:8080","apiRoot":"/api","resumePath":"/resumes","jobPath":"/jobs"},"assets":{"root":"/app/assets"}}});;
+
+var _config2 = _interopRequireDefault(_config);
+
 var Job = _backbone2['default'].Model.extend({
   idAttribute: 'id',
-  urlRoot: "http://localhost:8080/api/jobs",
+  urlRoot: _config2['default'].get('Client.restServer.address') + _config2['default'].get('Client.restServer.apiRoot') + _config2['default'].get('Client.restServer.jobPath'),
   defaults: {
     path: "",
     password: "",
@@ -155,7 +253,7 @@ var Job = _backbone2['default'].Model.extend({
 exports['default'] = Job;
 module.exports = exports['default'];
 
-},{"backbone":9}],4:[function(require,module,exports){
+},{"backbone":10}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -168,15 +266,42 @@ var _backbone = require('backbone');
 
 var _backbone2 = _interopRequireDefault(_backbone);
 
+var _config = (function (props) {
+                        var self = {};
+                        var _getByPropPath = function (o, s) {
+                            // http://stackoverflow.com/a/6491621
+                            s = s.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+                            s = s.replace(/^\./, '');           // strip a leading dot
+                            var a = s.split('.');
+                            for (var i = 0, n = a.length; i < n; ++i) {
+                                var k = a[i];
+                                if (k in o) {
+                                    o = o[k];
+                                } else {
+                                    return;
+                                }
+                            }
+                            return o;
+                        };
+
+                        self.get = function (a) {
+                            return _getByPropPath(props, a);
+                        };
+
+                        return self;
+                    })({"Client":{"testProperty":"Default","restServer":{"address":"http://localhost:8080","apiRoot":"/api","resumePath":"/resumes","jobPath":"/jobs"},"assets":{"root":"/app/assets"}}});;
+
+var _config2 = _interopRequireDefault(_config);
+
 var Resume = _backbone2['default'].Model.extend({
   idAttribute: 'id',
-  urlRoot: "http://localhost:8080/api/resumes"
+  urlRoot: _config2['default'].get('Client.restServer.address') + _config2['default'].get('Client.restServer.apiRoot') + _config2['default'].get('Client.restServer.resumePath')
 });
 
 exports['default'] = Resume;
 module.exports = exports['default'];
 
-},{"backbone":9}],5:[function(require,module,exports){
+},{"backbone":10}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -246,7 +371,7 @@ var Router = (function (_Backbone$Router) {
 exports['default'] = Router;
 module.exports = exports['default'];
 
-},{"./components/app-controller":2,"./views/create-view":6,"./views/job-view":7,"backbone":9,"jquery":12}],6:[function(require,module,exports){
+},{"./components/app-controller":2,"./views/create-view":7,"./views/job-view":8,"backbone":10,"jquery":13}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -315,7 +440,7 @@ var CreateView = _backbone2['default'].View.extend({
 exports['default'] = CreateView;
 module.exports = exports['default'];
 
-},{"../models/job":3,"backbone":9,"jquery":12,"underscore":14}],7:[function(require,module,exports){
+},{"../models/job":4,"backbone":10,"jquery":13,"underscore":15}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -367,7 +492,7 @@ var JobView = _backbone2['default'].View.extend({
 exports['default'] = JobView;
 module.exports = exports['default'];
 
-},{"../models/job":3,"../views/resume-view":8,"backbone":9,"jquery":12,"underscore":14}],8:[function(require,module,exports){
+},{"../models/job":4,"../views/resume-view":9,"backbone":10,"jquery":13,"underscore":15}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -411,13 +536,9 @@ var _config = (function (props) {
                         };
 
                         return self;
-                    })({"Client":{"testProperty":"Default","restServer":{"address":"http://localhost:8080","apiRoot":"/api","resumePath":"/resumes","jobPath":"/jobs"}}});;
+                    })({"Client":{"testProperty":"Default","restServer":{"address":"http://localhost:8080","apiRoot":"/api","resumePath":"/resumes","jobPath":"/jobs"},"assets":{"root":"/app/assets"}}});;
 
 var _config2 = _interopRequireDefault(_config);
-
-var _dropzone = require('dropzone');
-
-var _dropzone2 = _interopRequireDefault(_dropzone);
 
 var _spinJs = require('spin.js');
 
@@ -426,6 +547,10 @@ var _spinJs2 = _interopRequireDefault(_spinJs);
 var _collectionsResumes = require('../collections/resumes');
 
 var _collectionsResumes2 = _interopRequireDefault(_collectionsResumes);
+
+var _componentsResumeDropzone = require('../components/resume-dropzone');
+
+var _componentsResumeDropzone2 = _interopRequireDefault(_componentsResumeDropzone);
 
 var ResumeView = _backbone2['default'].View.extend({
   template: _underscore2['default'].template((0, _jquery2['default'])('#resume-template').html()),
@@ -481,10 +606,12 @@ var ResumeView = _backbone2['default'].View.extend({
     return this.collection.fetch({ data: { id: this.jobID } }).then(populateTable);
   },
   renderTable: function renderTable(rendered) {
-    return Promise.resolve((0, _jquery2['default'])('#data-table').html(rendered));
+    if ((0, _jquery2['default'])('#data-table').length) return Promise.resolve((0, _jquery2['default'])('#data-table').html(rendered));else this.render().then((function () {
+      _componentsResumeDropzone2['default'].render(this);
+    }).bind(this));
   },
   refreshTable: function refreshTable() {
-    return this.renderCollection().then(this.renderTable);
+    return this.renderCollection().then(this.renderTable.bind(this));
   },
   toggleSort: function toggleSort() {
     this.scoreDescending = !this.scoreDescending;
@@ -514,7 +641,7 @@ var ResumeView = _backbone2['default'].View.extend({
 exports['default'] = ResumeView;
 module.exports = exports['default'];
 
-},{"../collections/resumes":1,"backbone":9,"dropzone":10,"jquery":12,"spin.js":13,"underscore":14}],9:[function(require,module,exports){
+},{"../collections/resumes":1,"../components/resume-dropzone":3,"backbone":10,"jquery":13,"spin.js":14,"underscore":15}],10:[function(require,module,exports){
 (function (global){
 //     Backbone.js 1.2.3
 
@@ -2412,7 +2539,7 @@ module.exports = exports['default'];
 }));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"jquery":12,"underscore":14}],10:[function(require,module,exports){
+},{"jquery":13,"underscore":15}],11:[function(require,module,exports){
 
 /*
  *
@@ -4166,7 +4293,7 @@ module.exports = exports['default'];
 
 }).call(this);
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 var jQuery = require('jquery');
 
 /*! jQuery UI - v1.10.3 - 2013-05-03
@@ -19173,7 +19300,7 @@ $.widget( "ui.tooltip", {
 
 }( jQuery ) );
 
-},{"jquery":12}],12:[function(require,module,exports){
+},{"jquery":13}],13:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.1.4
  * http://jquery.com/
@@ -28385,7 +28512,7 @@ return jQuery;
 
 }));
 
-},{}],13:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 /**
  * Copyright (c) 2011-2014 Felix Gnass
  * Licensed under the MIT license
@@ -28764,7 +28891,7 @@ return jQuery;
 
 }));
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 //     Underscore.js 1.8.3
 //     http://underscorejs.org
 //     (c) 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -30314,7 +30441,7 @@ return jQuery;
   }
 }.call(this));
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 'use strict';
 
 require('./tests/example');
@@ -30326,7 +30453,7 @@ if (!window.__karma__) {
   mocha.run();
 }
 
-},{"./tests/example":16,"./tests/router":17}],16:[function(require,module,exports){
+},{"./tests/example":17,"./tests/router":18}],17:[function(require,module,exports){
 "use strict";
 
 describe("Simple tests examples", function () {
@@ -30378,7 +30505,7 @@ describe("Async tests", function () {
   });
 });
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
@@ -30399,4 +30526,4 @@ describe("Router", function () {
   });
 });
 
-},{"../../app/router":5,"backbone":9}]},{},[15]);
+},{"../../app/router":6,"backbone":10}]},{},[16]);

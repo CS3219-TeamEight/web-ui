@@ -13,6 +13,7 @@ module.exports = ->
   # During development: lint the code, build out the development bundle, run
   # the connect server, and watch for changes.
   @registerTask "development", [
+    "env:dev"
     "jshint"
     "browserify:development"
     "browserify:testing"
@@ -22,6 +23,7 @@ module.exports = ->
 
   # During production: lint, build out assets, and run tests.
   @registerTask "production", [
+    "env:build"
     "clean"
     "jshint"
     "browserify:production"

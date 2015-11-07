@@ -2,9 +2,9 @@ import Backbone from 'backbone';
 import $ from 'jquery';
 import _ from 'underscore';
 import Config from 'config';
-import Dropzone from 'dropzone';
 import Spinner from 'spin.js';
 import Resumes from '../collections/resumes';
+import ResumeDrop from '../components/resume-dropzone';
 
 var ResumeView = Backbone.View.extend({
   template: _.template($('#resume-template').html()),
@@ -61,10 +61,11 @@ var ResumeView = Backbone.View.extend({
       .then(populateTable);
   },
   renderTable: function(rendered) {
-    return Promise.resolve($('#data-table').html(rendered));
+    if ($('#data-table').length) return Promise.resolve($('#data-table').html(rendered));
+    else this.render().then(function() { ResumeDrop.render(this); }.bind(this));
   },
   refreshTable: function() {
-    return this.renderCollection().then(this.renderTable);
+    return this.renderCollection().then(this.renderTable.bind(this));
   },
   toggleSort: function() {
     this.scoreDescending = !this.scoreDescending;

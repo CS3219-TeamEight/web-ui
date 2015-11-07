@@ -6,6 +6,9 @@
       "apiRoot" : "/api",
       "resumePath" : "/resumes",
       "jobPath" : "/jobs"
+    },
+    "assets": {
+      "root": "/app/assets"
     }
   }
 }
