@@ -49,7 +49,7 @@
           </div>
           <div class="row top17">
             <div class="center-block input-box">
-              <h3>The <b>title</b> of my job is <input id="txt-title" type="text" placeholder="UX/UI Designer" data-trigger="manual" data-placement="right" data-content="Please enter a job title.">.</h3>
+              <h3>The <b>title</b> of my job is <input id="txt-title" type="text" placeholder="UX/UI Designer">.</h3>
             </div>
           </div>
         </div>
@@ -59,10 +59,10 @@
               <h2>Now tell us more about your job requirements.</h2>
             </div>
             <div class="center-block input-box">
-              <h3>My job posting resides in the <input id="txt-industry" type="text" style="width:150px;" placeholder="Engineering" data-trigger="manual" data-placement="right" data-content="Please enter your job's applicable industry."> <b>industry</b>.</h3>
+              <h3>My job posting resides in the <input id="txt-industry" type="text" style="width:150px;" placeholder="Engineering"> <b>industry</b>.</h3>
             </div>
             <div class="center-block input-box">
-              <h3>and we need candidates with at least <input id="txt-experience" type="text" style="width:2em;" maxlength="2" placeholder="5" data-trigger="manual" data-placement="right" data-content="Please enter the required years of working experiences."> <b>years</b> of working experience.</h3>
+              <h3>and we need candidates with at least <input id="txt-experience" type="text" style="width:2em;" maxlength="2" placeholder="5"> <b>years</b> of working experience.</h3>
             </div>
           </div>
           <div class="row top10">
@@ -93,7 +93,7 @@
                 <option value="phd">PhD</option>
                 <option value="none">None</option>
               </select>
-              in  <input id="txt-education" type="text" style="width:300px;" placeholder="Digital Media" data-trigger="manual" data-placement="right" data-content="Please enter the education's field.">.</h3>
+              in  <input id="txt-education" type="text" style="width:300px;" placeholder="Digital Media">.</h3>
             </div>
           </div>
           <div class="row top10">
@@ -121,7 +121,7 @@
           </div>
           <div class="row top10">
             <div class="center-block">
-              <textarea id="txt-language" class="form-control" rows="6" placeholder="English, Chinese, Korean" data-trigger="manual" data-placement="right" data-content="Please enter a job description."></textarea>
+              <textarea id="txt-language" class="form-control" rows="6" placeholder="English, Chinese, Korean"></textarea>
             </div>
           </div>
           <div class="row top10">
@@ -131,7 +131,7 @@
           </div>
           <div class="row top10">
             <div class="center-block">
-              <textarea id="txt-skill" class="form-control" rows="6" placeholder="Efficient in Maya, Photoshop .." data-trigger="manual" data-placement="right" data-content="Please enter a job description."></textarea>
+              <textarea id="txt-skill" class="form-control" rows="6" placeholder="Efficient in Maya, Photoshop .."></textarea>
             </div>
           </div>
           <div class="row top10">
@@ -166,7 +166,7 @@
           </div>
           <div class="row top10">
             <div class="center-block">
-              <textarea id="txt-desc" class="form-control" rows="8" placeholder="Our company Moxyville residing in San Frans.." data-trigger="manual" data-placement="right" data-content="Please enter a job description."></textarea>
+              <textarea id="txt-desc" class="form-control" rows="8" placeholder="Our company Moxyville residing in San Frans.."></textarea>
             </div>
           </div>
           <div class="row top30">
@@ -208,7 +208,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="center-block">
-          <h3>The job title is <span class="highlight-text"><%- jobTitle %></span></h3>
+          <h3>
+            The job title is <span class="highlight-text"><%- jobTitle %></span>
+            <span style="cursor: pointer;" id="share-url" class="glyphicon glyphicon-send" aria-hidden="true"></span>
+          </h3>
         </div>
       </div>
       <div class="row">
@@ -222,9 +225,36 @@
           </a>
         </div>
       </div>
-      <div class="row collapse in" id="description">
-        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
-          <h5 class="description-text"><%- jobDescription %></h5>
+      <div class="collapse in" id="description">
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+            <table class="description-text">
+              <tr>
+                <td><b>Job Industry</b></td>
+                <td>Kappa</td>
+                <td><b>Min. Years Experience</b></td>
+                <td>Kappa</td>
+              </tr>
+              <tr>
+                <td><b>Highest Education Level</b></td>
+                <td>Kappa</td>
+                <td><b>Field of Education</b></td>
+                <td>Kappa</td>
+              </tr>
+              <tr>
+                <td><b>Work-Related Skills</b></td>
+                <td>Kappa</td>
+                <td><b>Linguistic Skills</b></td>
+                <td>Kappa</td>
+              </tr>
+              <tr>
+                <td colspan="4" align="center"><b>Company/Detailed Job description</b></td>
+            </tr>
+              <tr>
+                <td colspan="4"><%- jobDescription %></td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -248,11 +278,14 @@
         <div class="row">
           <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
             <div class="center-block input-box">
-              <h4>Give me the top <input id="resumeCount" class="resume-box" type="text" maxLength="3" placeholder="10" data-trigger="manual" data-placement="top" data-content="Please enter a valid limit.">resumes</h4>
+              <h4>Give me the top <input id="resume-count" class="resume-box" type="text" maxLength="3" placeholder="10" data-trigger="manual" data-placement="top" data-content="Please enter a valid limit.">resumes.</h4>
+              <button id="btn-download" type="button" class="btn btn-primary">
+                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download as .zip
+              </button>
             </div>
           </div>
         </div>
-        <div id="data-table" class="row">
+        <div id="data-table" class="row top10">
           <%= dataTable %>
         </div>
       </div>
@@ -282,9 +315,9 @@
           <td class="col-md-2 col-xs-2">#</td>
           <td>Resume</td>
           <td class="col-md-2 col-xs-3">
-            <span id="scoreToggle">Score
+            <span id="score-toggle">Score
               <!-- build:[src] /assets/img/sort-arrow-down.png -->
-              <img id="sortArrow" src="/app/assets/img/sort-arrow-down.png">
+              <img id="sort-arrow" src="/app/assets/img/sort-arrow-down.png">
               <!-- /build -->
             </span>
           </td>
@@ -292,7 +325,8 @@
         <% _.each(resumes, function(resume) { %>
         <tr>
           <td><%- resume.rank %></td>
-          <td><a href="<%- resume.download %>"><%- resume.fileName %></a></td>
+          <td><a href="<%- resume.download %>"><%- resume.fileName %>
+          <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span></a></td>
           <td><%- resume.score %></td>
         </tr>
         <% }); %>

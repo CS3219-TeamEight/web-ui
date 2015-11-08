@@ -16,12 +16,13 @@ var ResumeView = Backbone.View.extend({
     this.limit = 10;
     this.timer = setInterval(function() {
       this.collection.fetch({data: {id: this.jobID}});
-    }.bind(this), 5000);
+    }.bind(this), 2000);
     this.listenTo(this.collection, 'add', this.refreshTable);
   },
   events: {
-    'click #scoreToggle': 'toggleSort',
-    'keyup #resumeCount': 'handleFilterChange'
+    'click #score-toggle': 'toggleSort',
+    'click #btn-download': 'downloadZIP',
+    'keyup #resume-count': 'handleFilterChange'
   },
   close: function() {
     clearInterval(this.timer);
@@ -72,22 +73,32 @@ var ResumeView = Backbone.View.extend({
     var arrowDirection = this.scoreDescending ? 'down' : 'up';
     var oppositeDirection = this.scoreDescending ? 'up' : 'down';
     var refreshArrow = function(rendered) {
-      var currentArrow = $('#sortArrow').attr('src');
+      var currentArrow = $('#sort-arrow').attr('src');
       currentArrow = currentArrow.replace(new RegExp(oppositeDirection, 'g'), arrowDirection);
-      $('#sortArrow').attr("src", currentArrow);
+      $('#sort-arrow').attr("src", currentArrow);
     };
     this.renderCollection().then(this.renderTable).then(refreshArrow);
   },
   handleFilterChange: function() {
-    var limit = $('#resumeCount').val().trim();
-    if (_.isEmpty(limit)) this.limit = 10;
-    else if (_.isFinite(limit) && limit > 0){
+    var limit = $('#resume-count').val().trim();
+    if (_.isEmpty(limit)) limit = 10;
+    if (_.isFinite(limit) && limit > 0){
       this.limit = limit;
       return this.refreshTable();
     } else {
-      $('#resumeCount').popover('show');
-      setTimeout(function(){$('#resumeCount').popover('hide');}, 1000);
+      $('#resume-count').popover('show');
+      setTimeout(function(){$('#resume-count').popover('hide');}, 1000);
     }
+  },
+  downloadZIP: function() {
+    var self = this;
+    var resumes = this.collection.first(parseInt(this.limit));
+    resumes = _.map(resumes, function(resume, index) {
+      return resume.toJSON().id;
+    });
+
+    var postURL = Config.get('Client.restServer.address') + Config.get('Client.restServer.apiRoot') + Config.get('Client.restServer.resumePath') + '/batch';
+    $.post(postURL, resumes);
   }
 });
 

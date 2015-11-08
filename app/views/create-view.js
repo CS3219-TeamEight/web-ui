@@ -132,25 +132,35 @@ var CreateView = Backbone.View.extend({
       mutiplierSkill: mutiplierSkill
     });
 
-    newJob.save(null, {success: function(model, response) {
-      Backbone.history.navigate(model.get('id'), true);
-    }});
+    var warningTitle = 'Please ensure that you entered the following:';
+    var warnings = [];
+    if(_.isEmpty(jobTitle)) { warnings.push('<li>your job title</li>'); }
+    if(_.isEmpty(jobIndustry)) { warnings.push('<li>your job industry</li>'); }
+    if(_.isEmpty(jobExperience)) { warnings.push('<li>desired job experience</li>'); }
+    else if(jobExperience >>> 0 !== parseFloat(jobExperience)) { warnings.push('<li>a valid number for job experience</li>'); }
+    if(educationLevel !== 'none' && _.isEmpty(educationField)) { warnings.push('<li>desired education field</li>'); }
 
-    /* Validation
-    if(_.isEmpty(title)) {
-      $('#txtTitle').popover('show');
-      setTimeout(function(){$('#txtTitle').popover('hide');}, 1000);
+    if (warnings.length !== 0) {
+      var formattedWarning = '<ul>';
+      _.each(warnings, function(warning){
+        formattedWarning += warning;
+      });
+      formattedWarning += '</ul>';
+      var options = {
+        html: true,
+        title: warningTitle,
+        trigger: 'manual'
+      };
+      $('#btn-create').popover(options);
+      var popover = $('#btn-create').data('bs.popover');
+      popover.options.content = formattedWarning;
+      $('#btn-create').popover('show');
+      setTimeout(function(){$('#btn-create').popover('hide');}, 3000);
+    } else {
+      newJob.save(null, {success: function(model, response) {
+        Backbone.history.navigate(model.get('id'), true);
+      }});
     }
-
-    if (_.isEmpty(description)) {
-      $('#txtDesc').popover('show');
-      setTimeout(function(){$('#txtDesc').popover('hide');}, 1000);
-    }
-
-    if(!_.isEmpty(title) && !_.isEmpty(description)) {
-
-    }
-    */
   }
 });
 
