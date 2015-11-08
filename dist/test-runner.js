@@ -96,6 +96,7 @@ require('jquery-ui');
 var AppController = {
   currentView: null,
   createJob: function createJob() {
+    var that = this;
     var view = new _viewsCreateView2['default']();
     this.renderView.call(self, view);
   },
@@ -111,6 +112,7 @@ var AppController = {
       this.currentView = view;
       return view.render().then(function (rendered) {
         (0, _jquery2['default'])('#main').html(rendered.el).fadeIn();
+        if (typeof view.initializeBS === 'function') view.initializeBS();
       });
     }).bind(this);
 
@@ -243,12 +245,7 @@ var _config2 = _interopRequireDefault(_config);
 
 var Job = _backbone2['default'].Model.extend({
   idAttribute: 'id',
-  urlRoot: _config2['default'].get('Client.restServer.address') + _config2['default'].get('Client.restServer.apiRoot') + _config2['default'].get('Client.restServer.jobPath'),
-  defaults: {
-    path: "",
-    password: "",
-    visibility: 1
-  }
+  urlRoot: _config2['default'].get('Client.restServer.address') + _config2['default'].get('Client.restServer.apiRoot') + _config2['default'].get('Client.restServer.jobPath')
 });
 
 exports['default'] = Job;
@@ -403,43 +400,158 @@ var _modelsJob2 = _interopRequireDefault(_modelsJob);
 
 var CreateView = _backbone2['default'].View.extend({
   model: _modelsJob2['default'],
-  template: _underscore2['default'].template((0, _jquery2['default'])('#create-template').html()),
+  frontTemplate: _underscore2['default'].template((0, _jquery2['default'])('#front-template').html()),
+  initialize: function initialize() {
+    this.currentPage = 0;
+    this.minPage = 0;
+    this.maxPage = 4;
+    this.toggleMethods = [this.toggleFront, this.toggleJobReq, this.toggleEducationReq, this.toggleSkillLang, this.toggleSummary];
+    this.navMapping = {
+      'front-nav': 0,
+      'job-nav': 1,
+      'education-nav': 2,
+      'skill-lang-nav': 3,
+      'summary-nav': 4
+    };
+  },
   render: function render() {
-    this.$el.html(this.template());
+    this.$el.html(this.frontTemplate());
     return Promise.resolve(this);
   },
   events: {
-    'click #btnCreate': 'addJob'
+    'click #btn-next': 'toggleNext',
+    'click #btn-prev': 'togglePrev',
+    'click #btn-create': 'createJob',
+    'click #front-nav, #job-nav, #education-nav, #skill-lang-nav, #summary-nav': 'setActiveNav'
   },
-  addJob: function addJob() {
-    var title = (0, _jquery2['default'])('#txtTitle').val().trim();
-    var description = (0, _jquery2['default'])('#txtDesc').val().trim();
-
-    if (_underscore2['default'].isEmpty(title)) {
-      (0, _jquery2['default'])('#txtTitle').popover('show');
-      setTimeout(function () {
-        (0, _jquery2['default'])('#txtTitle').popover('hide');
-      }, 1000);
+  initializeBS: function initializeBS() {
+    (0, _jquery2['default'])('#front-nav').tooltip();
+    (0, _jquery2['default'])('#job-nav').tooltip();
+    (0, _jquery2['default'])('#education-nav').tooltip();
+    (0, _jquery2['default'])('#skill-lang-nav').tooltip();
+    (0, _jquery2['default'])('#summary-nav').tooltip();
+  },
+  toggleFront: function toggleFront(toggle) {
+    if (toggle === 1) {
+      (0, _jquery2['default'])('#front-panel').fadeIn();
+      (0, _jquery2['default'])('#btn-prev').hide();
+    } else if (toggle === 0) {
+      (0, _jquery2['default'])('#front-panel').hide();
+      (0, _jquery2['default'])('#btn-prev').show();
     }
-
-    if (_underscore2['default'].isEmpty(description)) {
-      (0, _jquery2['default'])('#txtDesc').popover('show');
-      setTimeout(function () {
-        (0, _jquery2['default'])('#txtDesc').popover('hide');
-      }, 1000);
+  },
+  toggleJobReq: function toggleJobReq(toggle) {
+    if (toggle === 1) {
+      (0, _jquery2['default'])('#job-panel').fadeIn();
+    } else if (toggle === 0) {
+      (0, _jquery2['default'])('#job-panel').hide();
     }
-
-    if (!_underscore2['default'].isEmpty(title) && !_underscore2['default'].isEmpty(description)) {
-      var newJob = new this.model({
-        desiredID: _shortid2['default'].generate(),
-        description: description,
-        title: title
-      });
-
-      newJob.save(null, { success: function success(model, response) {
-          _backbone2['default'].history.navigate(model.get('id'), true);
-        } });
+  },
+  toggleEducationReq: function toggleEducationReq(toggle) {
+    if (toggle === 1) {
+      (0, _jquery2['default'])('#education-panel').fadeIn();
+    } else if (toggle === 0) {
+      (0, _jquery2['default'])('#education-panel').hide();
     }
+  },
+  toggleSkillLang: function toggleSkillLang(toggle) {
+    if (toggle === 1) {
+      (0, _jquery2['default'])('#skill-lang-panel').fadeIn();
+    } else if (toggle === 0) {
+      (0, _jquery2['default'])('#skill-lang-panel').hide();
+    }
+  },
+  toggleSummary: function toggleSummary(toggle) {
+    if (toggle === 1) {
+      (0, _jquery2['default'])('#summary-panel').fadeIn();
+      (0, _jquery2['default'])('#btn-next').hide();
+    } else if (toggle === 0) {
+      (0, _jquery2['default'])('#summary-panel').hide();
+      (0, _jquery2['default'])('#btn-next').show();
+    }
+  },
+  setActiveNav: function setActiveNav(event) {
+    var targetPage = this.navMapping[event.target.id];
+    (0, _jquery2['default'])('#' + event.target.id).tooltip('hide');
+    (0, _jquery2['default'])('#' + event.target.id).addClass('activeSlide');
+    (0, _jquery2['default'])('#' + _underscore2['default'].findKey(this.navMapping, (function (v) {
+      return v == this.currentPage;
+    }).bind(this))).removeClass('activeSlide');
+    if (targetPage !== this.currentPage) {
+      this.toggleMethods[this.currentPage](0);
+      this.toggleMethods[targetPage](1);
+      this.currentPage = targetPage;
+    }
+  },
+  toggleNext: function toggleNext() {
+    (0, _jquery2['default'])('#' + _underscore2['default'].findKey(this.navMapping, (function (v) {
+      return v == this.currentPage + 1;
+    }).bind(this))).addClass('activeSlide');
+    (0, _jquery2['default'])('#' + _underscore2['default'].findKey(this.navMapping, (function (v) {
+      return v == this.currentPage;
+    }).bind(this))).removeClass('activeSlide');
+    this.toggleMethods[this.currentPage](0);
+    this.toggleMethods[this.currentPage + 1](1);
+    if (this.currentPage < this.maxPage) this.currentPage++;
+  },
+  togglePrev: function togglePrev() {
+    (0, _jquery2['default'])('#' + _underscore2['default'].findKey(this.navMapping, (function (v) {
+      return v == this.currentPage - 1;
+    }).bind(this))).addClass('activeSlide');
+    (0, _jquery2['default'])('#' + _underscore2['default'].findKey(this.navMapping, (function (v) {
+      return v == this.currentPage;
+    }).bind(this))).removeClass('activeSlide');
+    this.toggleMethods[this.currentPage](0);
+    this.toggleMethods[this.currentPage - 1](1);
+    if (this.currentPage > this.minPage) this.currentPage--;
+  },
+  createJob: function createJob() {
+    var jobTitle = (0, _jquery2['default'])('#txt-title').val().trim();
+    var jobIndustry = (0, _jquery2['default'])('#txt-industry').val().trim();
+    var jobExperience = (0, _jquery2['default'])('#txt-experience').val().trim();
+    var educationLevel = (0, _jquery2['default'])('#education-level').val().trim();
+    var educationField = (0, _jquery2['default'])('#txt-education').val().trim();
+    var languageSkills = (0, _jquery2['default'])('#txt-language').val().trim();
+    var workSkills = (0, _jquery2['default'])('#txt-skill').val().trim();
+    var description = (0, _jquery2['default'])('#txt-desc').val().trim();
+
+    var mutiplierJob = (0, _jquery2['default'])('#metric-job').val().trim();
+    var mutiplierEdu = (0, _jquery2['default'])('#metric-education').val().trim();
+    var mutiplierLang = (0, _jquery2['default'])('#metric-language').val().trim();
+    var mutiplierSkill = (0, _jquery2['default'])('#metric-skill').val().trim();
+
+    var newJob = new this.model({
+      desiredID: _shortid2['default'].generate(),
+      jobTitle: jobTitle,
+      jobIndustry: jobIndustry,
+      jobExperience: jobExperience,
+      educationLevel: educationLevel,
+      educationField: educationField,
+      languageSkills: languageSkills,
+      workSkills: workSkills,
+      description: description,
+      mutiplierJob: mutiplierJob,
+      mutiplierEdu: mutiplierEdu,
+      mutiplierLang: mutiplierLang,
+      mutiplierSkill: mutiplierSkill
+    });
+
+    newJob.save(null, { success: function success(model, response) {
+        _backbone2['default'].history.navigate(model.get('id'), true);
+      } });
+
+    /* Validation
+    if(_.isEmpty(title)) {
+      $('#txtTitle').popover('show');
+      setTimeout(function(){$('#txtTitle').popover('hide');}, 1000);
+    }
+     if (_.isEmpty(description)) {
+      $('#txtDesc').popover('show');
+      setTimeout(function(){$('#txtDesc').popover('hide');}, 1000);
+    }
+     if(!_.isEmpty(title) && !_.isEmpty(description)) {
+     }
+    */
   }
 });
 
@@ -484,7 +596,7 @@ var JobView = _backbone2['default'].View.extend({
   render: function render() {
     var self = this;
     return this.model.fetch().then(function () {
-      self.$el.html(self.template({ jobTitle: self.model.get('title'),
+      self.$el.html(self.template({ jobTitle: self.model.get('jobTitle'),
         jobDescription: self.model.get('description') }));
       var view = new _viewsResumeView2['default']({ jobID: self.jobID });
       return view.render().then(function (rendered) {

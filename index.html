@@ -33,21 +33,172 @@
   <main role="main" id="main"></main>
 
   <!-- Templates for View -->
-  <script type="text/template" id="create-template">
-    <div class="container-fluid">
-      <div class="row">
-        <div class="center-block input-box">
-          <h3>The job title is <input id="txtTitle" type="text" placeholder="UX/UI Designer" data-trigger="manual" data-placement="right" data-content="Please enter a job title."></h3>
+  <script type="text/template" id="front-template">
+    <div class ="vertical-center">
+      <div class="container-fluid">
+        <div id="front-panel">
+          <div class="row">
+            <div class="center-block input-box">
+              <h1>Welcome to <b>rankr.</b></h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="center-block input-box">
+              <h2>Before we rank your resumes, we need some information about your job.</h2>
+            </div>
+          </div>
+          <div class="row top17">
+            <div class="center-block input-box">
+              <h3>The <b>title</b> of my job is <input id="txt-title" type="text" placeholder="UX/UI Designer" data-trigger="manual" data-placement="right" data-content="Please enter a job title.">.</h3>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row top10">
-        <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
-          <textarea id="txtDesc" class="form-control" rows="6" placeholder="This is a job for the best designers..." data-trigger="manual" data-placement="right" data-content="Please enter a job description."></textarea>
+        <div id="job-panel" style="display: none">
+          <div class="row">
+            <div class="center-block">
+              <h2>Now tell us more about your job requirements.</h2>
+            </div>
+            <div class="center-block input-box">
+              <h3>My job posting resides in the <input id="txt-industry" type="text" style="width:150px;" placeholder="Engineering" data-trigger="manual" data-placement="right" data-content="Please enter your job's applicable industry."> <b>industry</b>.</h3>
+            </div>
+            <div class="center-block input-box">
+              <h3>and we need candidates with at least <input id="txt-experience" type="text" style="width:2em;" maxlength="2" placeholder="5" data-trigger="manual" data-placement="right" data-content="Please enter the required years of working experiences."> <b>years</b> of working experience.</h3>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>I also believe that these <b>job</b> requirements are
+              <select id="metric-job" class="form-drop">
+                <option value="2">Important.</option>
+                <option value="1">Essential.</option>
+                <option value="0">Not Prioritized.</option>
+              </select>
+              </h3>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row top17">
-        <div class="center-block">
-           <button id="btnCreate" type="button" class="btn btn-info btn-lg">Start Ranking!</button>
+        <div id="education-panel" style="display: none">
+          <div class="row">
+            <div class="center-block">
+              <h2>What about your candidate's education? Let us know your expectation.</h2>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>The candidate should have a
+              <select id="education-level" class="form-drop">
+                <option value="diploma">Diploma</option>
+                <option value="degree">Degree</option>
+                <option value="masters">Masters</option>
+                <option value="phd">PhD</option>
+                <option value="none">None</option>
+              </select>
+              in  <input id="txt-education" type="text" style="width:300px;" placeholder="Digital Media" data-trigger="manual" data-placement="right" data-content="Please enter the education's field.">.</h3>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>I also believe that these <b>education</b> requirements are
+              <select id="metric-education" class="form-drop">
+                <option value="2">Important.</option>
+                <option value="1">Essential.</option>
+                <option value="0">Not Prioritized.</option>
+              </select>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div id="skill-lang-panel" style="display: none">
+          <div class="row">
+            <div class="center-block">
+              <h2>Do you expect any skills or language that the candidate should know?</h2>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>The candidate should have have the following <b>linguistic</b> skills
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block">
+              <textarea id="txt-language" class="form-control" rows="6" placeholder="English, Chinese, Korean" data-trigger="manual" data-placement="right" data-content="Please enter a job description."></textarea>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>and should have have the following <b>work-related</b> skills
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block">
+              <textarea id="txt-skill" class="form-control" rows="6" placeholder="Efficient in Maya, Photoshop .." data-trigger="manual" data-placement="right" data-content="Please enter a job description."></textarea>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>I also believe that these <b>linguistic</b> requirements are
+              <select id="metric-language" class="form-drop">
+                <option value="2">Important.</option>
+                <option value="1">Essential.</option>
+                <option value="0">Not Prioritized.</option>
+              </select>
+              </h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="center-block input-box">
+              <h3>and these <b>work-related</b> requirements are
+              <select id="metric-skill" class="form-drop">
+                <option value="2">Important.</option>
+                <option value="1">Essential.</option>
+                <option value="0">Not Prioritized.</option>
+              </select>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div id="summary-panel" style="display: none">
+          <div class="row top30">
+            <div class="center-block">
+              <h2>We are <b>done</b> with the ranking metrics!<h2>
+              <h3>If you are <b>sharing</b> the link to other candidates, you might want to let them know more by sharing it below.</h3>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block">
+              <textarea id="txt-desc" class="form-control" rows="8" placeholder="Our company Moxyville residing in San Frans.." data-trigger="manual" data-placement="right" data-content="Please enter a job description."></textarea>
+            </div>
+          </div>
+          <div class="row top30">
+            <div class="center-block">
+               <button id="btn-create" type="button" class="btn btn-info btn-lg">Start Ranking!</button>
+            </div>
+          </div>
+        </div>
+        <div id="nav-panel">
+          <div class="row top50">
+            <div class="center-block">
+              <a href="#" id="btn-prev" style="display: none">
+                <!-- build:[src] /assets/img/prev-arrow.png -->
+                <img src="/app/assets/img/prev-arrow.png">
+                <!-- /build -->
+              </a>
+              <a href="#" id="btn-next">
+                <!-- build:[src] /assets/img/next-arrow.png -->
+                <img src="/app/assets/img/next-arrow.png">
+                <!-- /build -->
+              </a>
+            </div>
+          </div>
+          <div class="row top5">
+            <div id="nav-pager">
+              <a href="#" id="front-nav" class="activeSlide" data-title="1. Job Title" data-toggle="tooltip" data-placement="bottom"></a>
+              <a href="#" id="job-nav" data-title="2. Job Requirements" data-toggle="tooltip" data-placement="bottom"></a>
+              <a href="#" id="education-nav" data-title="3. Education" data-toggle="tooltip" data-placement="bottom"></a>
+              <a href="#" id="skill-lang-nav" data-title="4. Skills and Linguistics" data-toggle="tooltip" data-placement="bottom"></a>
+              <a href="#" id="summary-nav" data-title="5. Company Description" data-toggle="tooltip" data-placement="bottom"></a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import ResumeDrop from './resume-dropzone';
 var AppController = {
     currentView: null,
     createJob: function() {
+      var that = this;
       var view = new CreateView();
       this.renderView.call(self, view);
     },
@@ -22,6 +23,7 @@ var AppController = {
         this.currentView = view;
         return view.render().then(function(rendered) {
           $('#main').html(rendered.el).fadeIn();
+          if(typeof view.initializeBS === 'function') view.initializeBS();
         });
       }.bind(this);
 

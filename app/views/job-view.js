@@ -13,7 +13,7 @@ var JobView = Backbone.View.extend({
   render: function() {
     var self = this;
     return this.model.fetch().then(function() {
-      self.$el.html(self.template({jobTitle:self.model.get('title'),
+      self.$el.html(self.template({jobTitle:self.model.get('jobTitle'),
       jobDescription:self.model.get('description')}));
       var view = new ResumeView({jobID: self.jobID});
       return view.render().then(function(rendered) {
