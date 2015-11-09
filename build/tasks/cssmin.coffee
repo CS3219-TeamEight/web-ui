@@ -5,4 +5,4 @@ module.exports = ->
   @config 'cssmin',
     release:
       files:
-        'dist/styles.min.css': ['app/assets/styles/index.css']
+        'dist/assets/styles/index.min.css': ['app/assets/styles/index.css']

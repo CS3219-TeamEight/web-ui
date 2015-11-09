@@ -111,10 +111,10 @@ var CreateView = Backbone.View.extend({
     var workSkills = $('#txt-skill').val().trim();
     var description = $('#txt-desc').val().trim();
 
-    var mutiplierJob = $('#metric-job').val().trim();
-    var mutiplierEdu = $('#metric-education').val().trim();
-    var mutiplierLang = $('#metric-language').val().trim();
-    var mutiplierSkill = $('#metric-skill').val().trim();
+    var multiplierJob = $('#metric-job').val().trim();
+    var multiplierEdu = $('#metric-education').val().trim();
+    var multiplierLang = $('#metric-language').val().trim();
+    var multiplierSkill = $('#metric-skill').val().trim();
 
     var newJob = new this.model({
       desiredID: ShortID.generate(),
@@ -126,10 +126,10 @@ var CreateView = Backbone.View.extend({
       languageSkills: languageSkills,
       workSkills: workSkills,
       description: description,
-      mutiplierJob: mutiplierJob,
-      mutiplierEdu: mutiplierEdu,
-      mutiplierLang: mutiplierLang,
-      mutiplierSkill: mutiplierSkill
+      multiplierJob: multiplierJob,
+      multiplierEdu: multiplierEdu,
+      multiplierLang: multiplierLang,
+      multiplierSkill: multiplierSkill
     });
 
     var warningTitle = 'Please ensure that you entered the following:';

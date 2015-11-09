@@ -8,7 +8,7 @@
   <title>Rankr</title>
 
   <!-- Application styles. -->
-  <link rel="stylesheet" href="/styles.min.css">
+  <link rel="stylesheet" href="/assets/styles/index.min.css">
 </head>
 
 <body>
@@ -29,31 +29,169 @@
   <main role="main" id="main"></main>
 
   <!-- Templates for View -->
-  <script type="text/template" id="create-template">
-  <div class="container-fluid vertical-center">
-      <div class="row">
-        <div class="center-block input-box">
-          <h3>The job title is <input id="txtTitle" type="text" placeholder="UX/UI Designer" data-trigger="manual" data-placement="right" data-content="Please enter a job title."></h3>
-        </div>
-      </div>
-      <div class="row top10">
-        <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
-          <form class="dropzone dz-clickable" dropzone id="description-dropzone">
-            <div class="dz-default dz-message">
-              <h4>Drag your job description here</h4>
+  <script type="text/template" id="front-template">
+    <div class ="vertical-center">
+      <div class="container-fluid">
+        <div id="front-panel">
+          <div class="row">
+            <div class="center-block input-box">
+              <h1>Welcome to <b>rankr.</b></h1>
             </div>
-          </form>
+          </div>
+          <div class="row">
+            <div class="center-block input-box">
+              <h2>Before we rank your resumes, we need some information about your job.</h2>
+            </div>
+          </div>
+          <div class="row top17">
+            <div class="center-block input-box">
+              <h3>The <b>title</b> of my job is <input id="txt-title" type="text" placeholder="UX/UI Designer">.</h3>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row top10">
-        <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2">
-          <h4 align="center">or type it here</h4>
-          <textarea id="txtDesc" class="form-control" rows="6" placeholder="This is a job for the best designers..." data-trigger="manual" data-placement="right" data-content="Please enter a job description."></textarea>
+        <div id="job-panel" style="display: none">
+          <div class="row">
+            <div class="center-block">
+              <h2>Now tell us more about your job requirements.</h2>
+            </div>
+            <div class="center-block input-box">
+              <h3>My job posting resides in the <input id="txt-industry" type="text" style="width:150px;" placeholder="Engineering"> <b>industry</b>.</h3>
+            </div>
+            <div class="center-block input-box">
+              <h3>and we need candidates with at least <input id="txt-experience" type="text" style="width:2em;" maxlength="2" placeholder="5"> <b>years</b> of working experience.</h3>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>I also believe that these <b>job</b> requirements are
+              <select id="metric-job" class="form-drop">
+                <option value="2">Important.</option>
+                <option value="1">Essential.</option>
+                <option value="0">Not Prioritized.</option>
+              </select>
+              </h3>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="row top17">
-        <div class="center-block">
-           <button id="btnCreate" type="button" class="btn btn-info btn-lg">Start Ranking!</button>
+        <div id="education-panel" style="display: none">
+          <div class="row">
+            <div class="center-block">
+              <h2>What about your candidate's education? Let us know your expectation.</h2>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>The candidate should have a
+              <select id="education-level" class="form-drop">
+                <option value="diploma">Diploma</option>
+                <option value="bachelor">Bachelor's</option>
+                <option value="honors">Honour's</option>
+                <option value="master">Masters</option>
+                <option value="ph.d">Ph.D</option>
+                <option value="none">None</option>
+              </select>
+              in  <input id="txt-education" type="text" style="width:300px;" placeholder="Digital Media">.</h3>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>I also believe that these <b>education</b> requirements are
+              <select id="metric-education" class="form-drop">
+                <option value="2">Important.</option>
+                <option value="1">Essential.</option>
+                <option value="0">Not Prioritized.</option>
+              </select>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div id="skill-lang-panel" style="display: none">
+          <div class="row">
+            <div class="center-block">
+              <h2>Do you expect any skills or language that the candidate should know?</h2>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>The candidate should have have the following <b>linguistic</b> skills
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block">
+              <textarea id="txt-language" class="form-control" rows="6" placeholder="English, Chinese, Korean"></textarea>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>and should have have the following <b>work-related</b> skills
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block">
+              <textarea id="txt-skill" class="form-control" rows="6" placeholder="Efficient in Maya, Photoshop .."></textarea>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block input-box">
+              <h3>I also believe that these <b>linguistic</b> requirements are
+              <select id="metric-language" class="form-drop">
+                <option value="2">Important.</option>
+                <option value="1">Essential.</option>
+                <option value="0.5">Not Prioritized.</option>
+              </select>
+              </h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="center-block input-box">
+              <h3>and these <b>work-related</b> requirements are
+              <select id="metric-skill" class="form-drop">
+                <option value="2">Important.</option>
+                <option value="1">Essential.</option>
+                <option value="0.5">Not Prioritized.</option>
+              </select>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <div id="summary-panel" style="display: none">
+          <div class="row top30">
+            <div class="center-block">
+              <h2>We are <b>done</b> with the ranking metrics!<h2>
+              <h3>If you are <b>sharing</b> the link to other candidates, you might want to let them know more by sharing it below.</h3>
+            </div>
+          </div>
+          <div class="row top10">
+            <div class="center-block">
+              <textarea id="txt-desc" class="form-control" rows="8" placeholder="Our company Moxyville residing in San Frans.."></textarea>
+            </div>
+          </div>
+          <div class="row top30">
+            <div class="center-block">
+               <button id="btn-create" type="button" class="btn btn-info btn-lg">Start Ranking <span class="glyphicon glyphicon-flash" aria-hidden="true"></span></button>
+            </div>
+          </div>
+        </div>
+        <div id="nav-panel">
+          <div class="row top50">
+            <div class="center-block">
+              <a href="#" id="btn-prev" style="display: none">
+                <img src="/assets/img/prev-arrow.png">
+              </a>
+              <a href="#" id="btn-next">
+                <img src="/assets/img/next-arrow.png">
+              </a>
+            </div>
+          </div>
+          <div class="row top5">
+            <div id="nav-pager">
+              <a href="#" id="front-nav" class="activeSlide" data-title="1. Job Title" data-toggle="tooltip" data-placement="bottom"></a>
+              <a href="#" id="job-nav" data-title="2. Job Requirements" data-toggle="tooltip" data-placement="bottom"></a>
+              <a href="#" id="education-nav" data-title="3. Education" data-toggle="tooltip" data-placement="bottom"></a>
+              <a href="#" id="skill-lang-nav" data-title="4. Skills and Linguistics" data-toggle="tooltip" data-placement="bottom"></a>
+              <a href="#" id="summary-nav" data-title="5. Company Description" data-toggle="tooltip" data-placement="bottom"></a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -63,7 +201,10 @@
     <div class="container-fluid">
       <div class="row">
         <div class="center-block">
-          <h3>The job title is <span class="highlight-text"><%- jobTitle %></span></h3>
+          <h3>
+            The job title is <span class="highlight-text"><%- jobTitle %></span>
+            <span style="cursor: pointer;" id="share-url" class="glyphicon glyphicon-send" aria-hidden="true"></span>
+          </h3>
         </div>
       </div>
       <div class="row">
@@ -75,9 +216,36 @@
           </a>
         </div>
       </div>
-      <div class="row collapse in" id="description">
-        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
-          <h5 class="description-text"><%- jobDescription %></h5>
+      <div class="collapse in" id="description">
+        <div class="row">
+          <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+            <table class="description-text">
+              <tr>
+                <td><b>Job Industry</b></td>
+                <td><%- jobIndustry %></td>
+                <td><b>Min. Years Experience</b></td>
+                <td><%- jobExperience %></td>
+              </tr>
+              <tr>
+                <td><b>Highest Education Level</b></td>
+                <td><%- educationLevel %></td>
+                <td><b>Field of Education</b></td>
+                <td><%- educationField %></td>
+              </tr>
+              <tr>
+                <td><b>Linguistic Skills</b></td>
+                <td><%- languageSkills %></td>
+                <td><b>Work-Related Skills</b></td>
+                <td><%- workSkills %></td>
+              </tr>
+              <tr>
+                <td colspan="4" align="center"><b>Company/Detailed Job description</b></td>
+            </tr>
+              <tr>
+                <td colspan="4"><%- description %></td>
+              </tr>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -99,11 +267,16 @@
         <div class="row">
           <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
             <div class="center-block input-box">
-              <h4>Give me the top <input id="resumeCount" class="resume-box" type="text" maxLength="3" placeholder="10" data-trigger="manual" data-placement="top" data-content="Please enter a valid limit.">resumes</h4>
+              <h4>Give me the top <input id="resume-count" class="resume-box" type="text" maxLength="3" placeholder="10" data-trigger="manual" data-placement="top" data-content="Please enter a valid limit.">resumes.</h4>
+              <a id="link-zip">
+                <button id="btn-download" type="button" class="btn btn-primary">
+                  <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download as .zip
+                </button>
+              </a>
             </div>
           </div>
         </div>
-        <div id="data-table" class="row">
+        <div id="data-table" class="row top10">
           <%= dataTable %>
         </div>
       </div>
@@ -117,7 +290,7 @@
       </div>
       <div class="row top10 collapse in" id="drop">
         <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
-          <div class="dropzone" id="resume-dropzone">
+          <div class="dropzone dz-clickable" id="resume-dropzone">
           </div>
         </div>
       </div>
@@ -131,19 +304,56 @@
           <td class="col-md-2 col-xs-2">#</td>
           <td>Resume</td>
           <td class="col-md-2 col-xs-3">
-            <span id="scoreToggle">Score
-              <img id="sortArrow" src="/assets/img/sort-arrow-down.png">
+            <span id="score-toggle">Score
+              <img id="sort-arrow" src="/assets/img/sort-arrow-down.png">
             </span>
           </td>
         </tr>
         <% _.each(resumes, function(resume) { %>
         <tr>
           <td><%- resume.rank %></td>
-          <td><a href="<%- resume.download %>"><%- resume.fileName %></a></td>
+          <td><a href="<%- resume.download %>"><%- resume.fileName %>
+          <span class="glyphicon glyphicon-cloud-download" aria-hidden="true"></span></a></td>
           <td><%- resume.score %></td>
         </tr>
         <% }); %>
       </table>
+    </div>
+  </script>
+
+  <script type="text/template" id="metric-template">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+        <a href="#metric" data-toggle="collapse" aria-expanded="true" aria-controls="resumes">
+          <h3 align="center">Ranking Metrics
+            <img src="/assets/img/expander-arrow.png"/>
+          </h3>
+        </a>
+      </div>
+    </div>
+    <div id="metric" class="bot30 collapse in">
+      <div class="row center-block">
+          <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+            <div style="float:right;">Important</div>
+            <div style="float:left;">Excluded</div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+        <h4 align="center">Job Requirements</h4><input id="range-job" type="range" min="0" max="2" step="0.1" value="<%- multiplierJob %>"/>
+        <h4 align="center">Education</h4><input id="range-edu" type="range" min="0" max="2" step="0.1" value="<%- multiplierEdu %>"/>
+        <h4 align="center">Linguistic</h4><input id="range-lang" type="range" min="0" max="2" step="0.1" value="<%- multiplierLang %>"/>
+        <h4 align="center">Work Skills</h4><input id="range-work" type="range" min="0" max="2" step="0.1" value="<%- multiplierSkill %>"/>
+        </div>
+      </div>
+      <div class="row top10">
+        <div class="center-block">
+          <button id="btn-metric" type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Adjust Metrics
+          </button>
+        </div>
+      </div>
     </div>
   </script>
 

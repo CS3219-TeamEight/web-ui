@@ -2,7 +2,7 @@ import Backbone from 'backbone';
 import $ from 'jquery';
 import _ from 'underscore';
 import Config from 'config';
-import Spinner from 'spin.js';
+import ShortID from 'shortid';
 import Resumes from '../collections/resumes';
 import ResumeDrop from '../components/resume-dropzone';
 
@@ -17,6 +17,7 @@ var ResumeView = Backbone.View.extend({
     this.timer = setInterval(function() {
       this.collection.fetch({data: {id: this.jobID}});
     }.bind(this), 2000);
+    this.listenTo(this.collection, 'change', this.refreshTable);
     this.listenTo(this.collection, 'add', this.refreshTable);
   },
   events: {
@@ -43,16 +44,21 @@ var ResumeView = Backbone.View.extend({
       if (self.collection.length === 0) return null;
       var contents = {};
       contents.resumes = self.collection.first(parseInt(self.limit));
+
       contents.resumes = _.map(contents.resumes, function(resume, index) {
         resume = resume.toJSON();
         resume.fileName = resume.resumePath.split("/").pop();
         resume.download = Config.get('Client.restServer.address') + Config.get('Client.restServer.apiRoot') + Config.get('Client.restServer.resumePath') + '/' + resume.id;
-        resume.rank = self.scoreDescending ? index + 1 : contents.resumes.length - index;
         return resume;
       });
 
       contents.resumes = _.sortBy(contents.resumes, function (resume) {
         return self.scoreDescending ? -resume.score : resume.score;
+      });
+
+      contents.resumes = _.map(contents.resumes, function(resume, index) {
+        resume.rank = self.scoreDescending ? index + 1 : contents.resumes.length - index;
+        return resume;
       });
 
       return self.dataTemplate(contents);
@@ -93,12 +99,12 @@ var ResumeView = Backbone.View.extend({
   downloadZIP: function() {
     var self = this;
     var resumes = this.collection.first(parseInt(this.limit));
-    resumes = _.map(resumes, function(resume, index) {
-      return resume.toJSON().id;
-    });
-
     var postURL = Config.get('Client.restServer.address') + Config.get('Client.restServer.apiRoot') + Config.get('Client.restServer.resumePath') + '/batch';
-    $.post(postURL, resumes);
+    postURL += "?zipUUID=" + ShortID.generate();
+    resumes = _.each(resumes, function(resume, index) {
+      postURL += "&resumes=" + resume.id;
+    });
+    $('#link-zip').attr('href', postURL);
   }
 });
 

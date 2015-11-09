@@ -8,7 +8,7 @@
   <title>Rankr</title>
 
   <!-- Application styles. -->
-  <!-- build:[href] /styles.min.css -->
+  <!-- build:[href] /assets/styles/index.min.css -->
   <link rel="stylesheet" href="/app/assets/styles/index.css">
   <!-- /build -->
 </head>
@@ -141,7 +141,7 @@
               <select id="metric-language" class="form-drop">
                 <option value="2">Important.</option>
                 <option value="1">Essential.</option>
-                <option value="0">Not Prioritized.</option>
+                <option value="0.5">Not Prioritized.</option>
               </select>
               </h3>
             </div>
@@ -152,7 +152,7 @@
               <select id="metric-skill" class="form-drop">
                 <option value="2">Important.</option>
                 <option value="1">Essential.</option>
-                <option value="0">Not Prioritized.</option>
+                <option value="0.5">Not Prioritized.</option>
               </select>
               </h3>
             </div>
@@ -172,7 +172,7 @@
           </div>
           <div class="row top30">
             <div class="center-block">
-               <button id="btn-create" type="button" class="btn btn-info btn-lg">Start Ranking!</button>
+               <button id="btn-create" type="button" class="btn btn-info btn-lg">Start Ranking <span class="glyphicon glyphicon-flash" aria-hidden="true"></span></button>
             </div>
           </div>
         </div>
@@ -232,27 +232,27 @@
             <table class="description-text">
               <tr>
                 <td><b>Job Industry</b></td>
-                <td>Kappa</td>
+                <td><%- jobIndustry %></td>
                 <td><b>Min. Years Experience</b></td>
-                <td>Kappa</td>
+                <td><%- jobExperience %></td>
               </tr>
               <tr>
                 <td><b>Highest Education Level</b></td>
-                <td>Kappa</td>
+                <td><%- educationLevel %></td>
                 <td><b>Field of Education</b></td>
-                <td>Kappa</td>
+                <td><%- educationField %></td>
               </tr>
               <tr>
-                <td><b>Work-Related Skills</b></td>
-                <td>Kappa</td>
                 <td><b>Linguistic Skills</b></td>
-                <td>Kappa</td>
+                <td><%- languageSkills %></td>
+                <td><b>Work-Related Skills</b></td>
+                <td><%- workSkills %></td>
               </tr>
               <tr>
                 <td colspan="4" align="center"><b>Company/Detailed Job description</b></td>
             </tr>
               <tr>
-                <td colspan="4"><%- jobDescription %></td>
+                <td colspan="4"><%- description %></td>
               </tr>
             </table>
           </div>
@@ -280,9 +280,11 @@
           <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
             <div class="center-block input-box">
               <h4>Give me the top <input id="resume-count" class="resume-box" type="text" maxLength="3" placeholder="10" data-trigger="manual" data-placement="top" data-content="Please enter a valid limit.">resumes.</h4>
-              <button id="btn-download" type="button" class="btn btn-primary">
-                <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download as .zip
-              </button>
+              <a id="link-zip">
+                <button id="btn-download" type="button" class="btn btn-primary">
+                  <span class="glyphicon glyphicon-save" aria-hidden="true"></span> Download as .zip
+                </button>
+              </a>
             </div>
           </div>
         </div>
@@ -300,7 +302,7 @@
           </h3>
         </a>
       </div>
-      <div class="row top10 bot30 collapse in" id="drop">
+      <div class="row top10 collapse in" id="drop">
         <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
           <div class="dropzone dz-clickable" id="resume-dropzone">
           </div>
@@ -332,6 +334,44 @@
         </tr>
         <% }); %>
       </table>
+    </div>
+  </script>
+
+  <script type="text/template" id="metric-template">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+        <a href="#metric" data-toggle="collapse" aria-expanded="true" aria-controls="resumes">
+          <h3 align="center">Ranking Metrics
+            <!-- build:[src] /assets/img/expander-arrow.png -->
+            <img src="/app/assets/img/expander-arrow.png"/>
+            <!-- /build -->
+          </h3>
+        </a>
+      </div>
+    </div>
+    <div id="metric" class="bot30 collapse in">
+      <div class="row center-block">
+          <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+            <div style="float:right;">Important</div>
+            <div style="float:left;">Excluded</div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+        <h4 align="center">Job Requirements</h4><input id="range-job" type="range" min="0" max="2" step="0.1" value="<%- multiplierJob %>"/>
+        <h4 align="center">Education</h4><input id="range-edu" type="range" min="0" max="2" step="0.1" value="<%- multiplierEdu %>"/>
+        <h4 align="center">Linguistic</h4><input id="range-lang" type="range" min="0" max="2" step="0.1" value="<%- multiplierLang %>"/>
+        <h4 align="center">Work Skills</h4><input id="range-work" type="range" min="0" max="2" step="0.1" value="<%- multiplierSkill %>"/>
+        </div>
+      </div>
+      <div class="row top10">
+        <div class="center-block">
+          <button id="btn-metric" type="button" class="btn btn-primary">
+            <span class="glyphicon glyphicon-fire" aria-hidden="true"></span> Adjust Metrics
+          </button>
+        </div>
+      </div>
     </div>
   </script>
 
