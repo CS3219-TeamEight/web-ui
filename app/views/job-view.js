@@ -43,7 +43,7 @@ var JobView = Backbone.View.extend({
           educationLevel: capitalize(self.model.get('educationLevel')),
           educationField: self.model.get('educationField'),
           languageSkills: self.model.get('languageSkills'),
-          workSkills: self.model.get('languageSkills'),
+          workSkills: self.model.get('workSkills'),
           description: self.model.get('description')
       };
 
